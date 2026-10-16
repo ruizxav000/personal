@@ -193,6 +193,8 @@ var POSTERS=[
 {k:"bear",src:"posters/dropout-bear.jpg",ar:1,x:.98,y:1.02,w:.25,r:-.05,hang:"tape",t:"The Dropout Bear",c:""}
 ];
 // TV channels, in order. Each is a 4:3 clip in media/ saved as both .mp4 and .webm (list it without the extension). Click the TV to flip through them.
+// The channel the TV is on when the page loads
+var TV_START="media/tv-ch5";
 var TV_CHANNELS=[{src:"media/tv-ch1",name:"Cows on the bluff"},{src:"media/tv-ch2",name:"The redwoods"},{src:"media/tv-ch3",name:"Sailboats in the fog"},{src:"media/tv-ch4",name:"Waves on the rocks"},{src:"media/tv-ch5",name:"Breggy at Fenway"}];
 // -----------------------------
 var $=function(i){return document.getElementById(i)};
@@ -353,14 +355,43 @@ var bg1=baseboard(RX-LX);bg1.rotateY(-PI/2);mesh(bg1,BB,RX,0,BZ);mesh(baseboard(
 seed=-2096445971;// ---------- tufted rug: warped black-and-white checkerboard ----------
 var RUGW=2.05,RUGD=1.46;
 function rugArt(S){var W=S,H=Math.round(S*RUGD/RUGW),C=[cvs(W,H),cvs(W,H)],c=C[0].getContext("2d"),b=C[1].getContext("2d");
-var img=c.createImageData(W,H),d=img.data,bi=b.createImageData(W,H),bd=bi.data,CELL=.088,E=.2,
-wells=[[.12,.14,.46,1.9,.36],[-.62,.45,.3,-1.1,.22],[.72,-.1,.26,.9,.18]];// swirl centers: x, z, radius, twist, bulge
-var DK=[22,21,20],LT=[238,233,222];
-for(var py=0;py<H;py++)for(var px=0;px<W;px++){var u=(px/W-.5)*RUGW,v=(py/H-.5)*RUGD;
-wells.forEach(function(w){var dx=u-w[0],dy=v-w[1],r2=(dx*dx+dy*dy)/(w[2]*w[2]),f=Math.exp(-r2*1.6),a=w[3]*f,cs=Math.cos(a),sn=Math.sin(a),k=1-w[4]*f;u=w[0]+(dx*cs-dy*sn)*k;v=w[1]+(dx*sn+dy*cs)*k});
-var sv=Math.sin(PI*u/CELL)*Math.sin(PI*v/CELL),m=Math.max(0,Math.min(1,.5+sv/(2*E))),t=px%5,q=py%5,tf=Math.max(0,1-Math.hypot(t-2,q-2+((px/5|0)%2)*1.5)/3),n=(R()-.5)*16,i=(py*W+px)*4;
-for(var ch=0;ch<3;ch++)d[i+ch]=Math.max(0,Math.min(255,(DK[ch]+(LT[ch]-DK[ch])*m)*(.86+.18*tf)+n));d[i+3]=255;
-var carve=Math.min(1,Math.abs(sv)/.18);bd[i]=bd[i+1]=bd[i+2]=Math.max(0,Math.min(255,70+tf*110+carve*60+n));bd[i+3]=255}
+var GW=266,GH=Math.round(GW*RUGD/RUGW),G=new Array(GW*GH),J=new Float32Array(GW*GH);
+var DK=[36,33,32],BR=[62,36,25],RU=[140,60,36],CR=[226,210,176],TN=[198,154,104],OC=[198,152,64],BK=[25,21,19],RD=[158,46,36];
+function set(x,y,col){if(x>=0&&y>=0&&x<GW&&y<GH)G[y*GW+x]=col}
+// border bands, by knot distance from the edge; s runs along whichever edge is nearest
+for(var y=0;y<GH;y++)for(var x=0;x<GW;x++){var e=Math.min(x,y,GW-1-x,GH-1-y),s=(e===x||e===GW-1-x)?y:x,col;
+if(e<2)col=BR;
+else if(e<7){var ph=s%10,tri=5-Math.abs(ph-5);col=(e-2)<tri?CR:BR}// sawtooth guard
+else if(e<9)col=BK;
+else if(e<27){var q=s%24,dx=Math.abs(q-12),dy=Math.abs(e-18),d=dx+dy;col=RU;
+if(d<=2)col=OC;else if(d<=4)col=BK;else if(d<=6)col=CR;else if(d<=8)col=BK;// stepped diamonds
+else if((q<=1||q>=23)&&dy<=3&&(q===0||dy===0))col=CR;// small cross between diamonds
+else if((e===10||e===25)&&s%4===0)col=TN}
+else if(e<29)col=BK;
+else if(e<33)col=(s%6===0&&(e===30||e===31))?RU:TN;
+else if(e<34)col=RU;
+else{var ab=.9+.08*Math.sin(y*.11+Math.sin(x*.013)*2)+.04*Math.sin(x*.05);col=[DK[0]*ab,DK[1]*ab,DK[2]*ab]}// field with abrash
+G[y*GW+x]=col;J[y*GW+x]=.94+R()*.12}
+// sprites: '.' empty, a/b palette colours
+var BEE=["..b.......b..","...b.....b...","..aaaaaaaaa..",".aabaaaaabaa.","aaaaaaaaaaaaa","a.aa.aaa.aa.a","a..a.....a..a","...aa...aa..."],
+FLY=["...b.....b...","....b...b....",".aa.aaaaa.aa.","aaaaabbbaaaaa","aabaaaaaaabaa",".aaaa.a.aaaa.","..aa..a..aa..","......a......"],
+BOSS=["......aaa......",".....aabaa.....","....aabbbaa....","..aaaaaaaaaaa..",".aabbaaaaabbaa.","aaaaaaaaaaaaaaa","aa.aaa.a.aaa.aa","a...aa.a.aa...a","....a..a..a....","...aa.....aa..."],
+SHIP=[".......a.......",".......a.......","......aaa......","......aba......","...a..aba..a...","...a.aaaaa.a...","a..aaabbbaaa..a","a..aaabbbaaa..a","aaaaaabbbaaaaaa","aaa.aaaaaaa.aaa","aa..aa.a.aa..aa","a....a...a....a"];
+function spr(rows,cx,y,pal){var w=rows[0].length,x0=cx-(w>>1);rows.forEach(function(r,j){for(var i=0;i<w;i++){var ch=r[i];if(ch!==".")set(x0+i,y+j,pal[ch])}})}
+function row(rows,n,gap,y,pal){var w=rows[0].length,step=w+gap,x0=Math.round(GW/2-(n*step-gap)/2+w/2);for(var k=0;k<n;k++)spr(rows,x0+k*step,y,pal)}
+var Y0=34,Y1=GH-34;// the shelf stands on the far edge, so the formation starts below it
+row(BOSS,4,8,Y0+21,{a:OC,b:RD});
+row(FLY,8,6,Y0+35,{a:RD,b:CR});
+row(BEE,8,7,Y0+47,{a:TN,b:CR});
+row(BEE,8,7,Y0+59,{a:TN,b:CR});
+spr(SHIP,GW>>1,Y1-17,{a:CR,b:RD});
+set(GW>>1,Y1-25,CR);set(GW>>1,Y1-24,CR);set(GW>>1,Y1-23,CR);// the fighter's shot
+// knots: each grid cell is shaded as a tuft, lighter wool sits a touch proud of the dark field
+var img=c.createImageData(W,H),d=img.data,bi=b.createImageData(W,H),bd=bi.data,kx=GW/W,ky=GH/H;
+for(var py=0;py<H;py++){var gy=Math.min(GH-1,py*ky|0),fy=py*ky-gy;for(var px=0;px<W;px++){var gx=Math.min(GW-1,px*kx|0),fx=px*kx-gx,k=gy*GW+gx,col=G[k],j=J[k],
+tf=Math.max(0,1-Math.hypot(fx-.5,fy-.5)*1.7),n=(R()-.5)*14,i=(py*W+px)*4,l=(col[0]+col[1]+col[2])/765;
+for(var ch=0;ch<3;ch++)d[i+ch]=Math.max(0,Math.min(255,col[ch]*j*(.82+.24*tf)+n));d[i+3]=255;
+bd[i]=bd[i+1]=bd[i+2]=Math.max(0,Math.min(255,60+tf*120+l*50+n));bd[i+3]=255}}
 c.putImageData(img,0,0);b.putImageData(bi,0,0);
 var t0=ctex(C[0]),t1=ctex(C[1],1);[t0,t1].forEach(function(t){t.repeat.set(1/RUGW,1/RUGD);t.offset.set(.5,.5)});return[t0,t1]}
 var RG=rugArt(MOB?1000:1600),rs_=new T.Shape(),RR=.05,hw=RUGW/2,hd_=RUGD/2;
@@ -1006,7 +1037,7 @@ vid.addEventListener("playing",tuned);vid.addEventListener("loadeddata",function
 vid.addEventListener("error",function(){VID_OK=false;tuned();CRT.uniforms.tMap.value=TVTEX});
 var TV_ON=true,TVON=1;function tvPower(rot){TV_ON=!TV_ON;KNOB.tvpow.userData.rz+=rot==null?-PI/2:rot;KNOB.tvpow.userData.pz=TV_ON?.005:0;if(TV_ON){TUNE_T=performance.now();if(LOADED!==TVCH)tune(TVCH,true);else vid.play().catch(function(){})}else setTimeout(function(){if(!TV_ON)vid.pause()},500)}
 function tune(i,held){if(!held)KNOB.tvch.userData.rz-=PI/6;var n=TV_CHANNELS.length;if(!n)return;TVCH=((i%n)+n)%n;if(!TV_ON)return;LOADED=TVCH;TUNING=true;TUNE_T=performance.now();clearTimeout(TUNE_TO);TUNE_TO=setTimeout(tuned,5000);vid.src=TV_CHANNELS[TVCH].src+(vid.canPlayType('video/mp4; codecs="avc1.640028, mp4a.40.2"')?".mp4":".webm");vid.load();vid.play().catch(function(){})}
-tune(0);
+tune(Math.max(0,TV_CHANNELS.map(function(c){return c.src}).indexOf(TV_START)));
 
 seed=1641327418;// ---------- framed diploma above the shelf ----------
 // cherry-mahogany moulding with dark lips, black top mat, thin gold inner mat
@@ -1209,7 +1240,7 @@ var t=a<1?[.05,.7,0]:[-.08,.86,0],dir=a<1?new T.Vector3(1.0,.55,2.1):new T.Vecto
 if(!focus)goal(V.home);if(FX)FX.resize(w,h,ren.getPixelRatio());$("vig").style.display=FX?"none":"";DUST.uniforms.uPx.value=h*ren.getPixelRatio()*.0078}
 size();cp.copy(gp);ct.copy(gt);addEventListener("resize",size);
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
-var sheet=$("sheet"),TG={tt:{t:"Now spinning",x:function(){return esc(NOW.t)+" by "+esc(NOW.a)+"."},b:"Pick up the sleeve"},house:{t:esc(ABOUT.title),x:function(){return "<span class=\"lede\">"+esc(ABOUT.text)+"</span><span class=\"connect\"><span class=\"lbl\">Let\u2019s connect</span><span class=\"crow\"><span class=\"ico\"><svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" aria-hidden=\"true\"><rect x=\"3\" y=\"5\" width=\"18\" height=\"14\" rx=\"2\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\"/><path d=\"M4 7l8 6 8-6\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\"/></svg></span><a id=\"aem\" href=\"mailto:"+esc(ABOUT.email)+"\">"+esc(ABOUT.email)+"</a><button class=\"btn ghost sm\" id=\"cpy\" type=\"button\">Copy</button></span><span class=\"crow\"><span class=\"ico in\">in</span><a href=\""+esc(ABOUT.linkedin)+"\" target=\"_blank\" rel=\"noopener\">LinkedIn profile<span class=\"ext\" aria-hidden=\"true\"> \u2197</span></a></span></span>"}},lamp:{t:"Mood",x:"Switch the light to see the room at night.",b:"Switch the light"},tv:{t:"Channel XR",x:function(){return VID_OK?"CH 0"+(TVCH+1)+" · "+esc(TV_CHANNELS[TVCH].name):"Warming up the tube..."},x2:1},diploma:{t:"Texas A&M University",x:"Bachelor of Science in Technology Management, College of Education and Human Development. Class of 2022."}};
+var sheet=$("sheet"),TG={tt:{t:"Now spinning",x:function(){return esc(NOW.t)+" by "+esc(NOW.a)+"."},b:"Pick up the sleeve"},house:{t:esc(ABOUT.title),x:function(){return "<span class=\"lede\">"+esc(ABOUT.text)+"</span><span class=\"connect\"><span class=\"lbl\">Let\u2019s connect</span><span class=\"crow\"><span class=\"ico\"><svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" aria-hidden=\"true\"><rect x=\"3\" y=\"5\" width=\"18\" height=\"14\" rx=\"2\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\"/><path d=\"M4 7l8 6 8-6\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\"/></svg></span><a id=\"aem\" href=\"mailto:"+esc(ABOUT.email)+"\">"+esc(ABOUT.email)+"</a><button class=\"btn ghost sm\" id=\"cpy\" type=\"button\">Copy</button></span><span class=\"crow\"><span class=\"ico in\">in</span><a href=\""+esc(ABOUT.linkedin)+"\" target=\"_blank\" rel=\"noopener\">LinkedIn profile<span class=\"ext\" aria-hidden=\"true\"> \u2197</span></a></span></span>"}},lamp:{t:"Mood",x:function(){return night?"Turn the lights back on to see the room by day.":"Switch the light to see the room at night."},b:"Switch the light"},tv:{t:"Channel XR",x:function(){return VID_OK?"CH 0"+(TVCH+1)+" · "+esc(TV_CHANNELS[TVCH].name):"Warming up the tube..."},x2:1},diploma:{t:"Texas A&M University",x:"Bachelor of Science in Technology Management, College of Education and Human Development. Class of 2022."}};
 (function(){tv.updateMatrixWorld(true);var c=new T.Vector3(SX,.03+TH/2,TD/2).applyMatrix4(tv.matrixWorld),d=new T.Vector3(0,0,1).transformDirection(tv.matrixWorld);V.tv={p:[c.x+d.x*.62,c.y+.1,c.z+d.z*.62],t:[c.x,c.y-.09,c.z]}})();
 POSTERS.forEach(function(P){var h=P.w*P.ar,k="poster:"+P.k;TG[k]={t:P.t,x:esc(P.c)};V[k]={p:[P.x,P.y,BZ+Math.max(P.w,h)*1.25+.22],t:[P.x,P.y,BZ]}});
 var TIP={tt:["Turntable","Now spinning"],sleeve:["Now playing",function(){return NOW.t}],lamp:["Lava lamp","Mood"],fig:["Fiddle leaf fig","Growing"],house:["Little house","Home base"],hg:["Hourglass","Time"],guitar:["Guitar","Off the clock"]};
@@ -1235,7 +1266,7 @@ function open_(tag){hint();if(tag==="floorlamp"){lampToggle();return}if(tag!=="h
 var WV=(tag==="diploma"||tag.indexOf("poster:")===0)?wallView(tag):null;if(WV){var PW=pk(focus);if(PW){focus=null;layPocket(PW)}focus=tag;goal(WV);yaw=pit=0;$("name").classList.add("off");sheet.classList.remove("on");$("back").hidden=false;return}
 if(tag==="tv"||tag==="tvch"||tag==="tvpow"){var PT=pk(focus);if(PT){focus=null;layPocket(PT)}if(tag==="tvch")tune(TVCH+1);if(tag==="tvpow")tvPower();focus="tv";goal(tvView());yaw=pit=0;$("name").classList.add("off");sheet.classList.remove("on");$("back").hidden=false;return}var P=pk(tag),d=TG[tag];if(!d&&!P)return;var P0=pk(focus);if(P0&&P0!==P){focus=null;layPocket(P0)}focus=tag;goal(V[tag]);yaw=pit=0;$("name").classList.add("off");
 $("back").hidden=true;if(P){layPocket(P);pocketSheet(P)}else{sheet.innerHTML="<h2>"+d.t+"</h2><p>"+(typeof d.x==="function"?d.x():d.x)+'</p><div class="row">'+(tag==="tv"&&VID_OK&&TV_CHANNELS.length>1?'<button class="btn ghost" id="chn">Next channel</button>':"")+(d.b?'<button class="btn" id="go">'+(tag==="lamp"&&night?"Turn the lights back on":d.b)+"</button>":"")+'<button class="btn ghost" id="bk">Step back</button></div>';
-$("bk").onclick=step;if($("cpy"))$("cpy").onclick=function(){var b=this,done=function(){b.textContent="Copied";setTimeout(function(){b.textContent="Copy"},1600)};try{navigator.clipboard.writeText(ABOUT.email).then(done,function(){var r=document.createRange();r.selectNodeContents($("aem"));var g=getSelection();g.removeAllRanges();g.addRange(r)})}catch(e){}};if($("chn"))$("chn").onclick=function(){tune(TVCH+1);setTimeout(function(){open_("tv")},500)};if($("go"))$("go").onclick=function(){if(tag==="lamp"){night=!night;$("go").textContent=night?"Turn the lights back on":"Switch the light"}else if(tag==="tv"){vid.muted=!vid.muted;if(!vid.muted){vid.currentTime=0;vid.play().catch(function(){})}$("go").textContent=vid.muted?"Turn the sound on":"Mute it"}else inspect(NOW)}}
+$("bk").onclick=step;if($("cpy"))$("cpy").onclick=function(){var b=this,done=function(){b.textContent="Copied";setTimeout(function(){b.textContent="Copy"},1600)};try{navigator.clipboard.writeText(ABOUT.email).then(done,function(){var r=document.createRange();r.selectNodeContents($("aem"));var g=getSelection();g.removeAllRanges();g.addRange(r)})}catch(e){}};if($("chn"))$("chn").onclick=function(){tune(TVCH+1);setTimeout(function(){open_("tv")},500)};if($("go"))$("go").onclick=function(){if(tag==="lamp"){night=!night;$("go").textContent=night?"Turn the lights back on":"Switch the light";var lp_=sheet.querySelector("p");if(lp_)lp_.textContent=TG.lamp.x()}else if(tag==="tv"){vid.muted=!vid.muted;if(!vid.muted){vid.currentTime=0;vid.play().catch(function(){})}$("go").textContent=vid.muted?"Turn the sound on":"Mute it"}else inspect(NOW)}}
 sheet.classList.add("on")}
 function pocketSheet(P){var n=P.list.length,top=P.p.k==="top10";
 var h="<h2>"+esc(P.p.name)+"</h2><p>"+(n?n+(n===1?" record":" records")+". Tap a spine to pull one out, or pick from here.":"Nothing in here right now.")+"</p>";
@@ -1320,7 +1351,7 @@ $("iw").textContent=(r.id&&NOTES[r.id])||"";
 $("play").hidden=r===NOW;$("flip").hidden=true;$("spot").hidden=false;$("spot").href=SPOTIFY[r.id]||("https://open.spotify.com/search/"+encodeURIComponent(r.a.replace(/ With Jaden Smith/,"")+" "+r.t));$("slide").hidden=false;I.closing=0;$("inspect").classList.remove("closing");$("slide").textContent="Slide out the vinyl";inspecting=true;$("name").classList.add("off");$("inspect").classList.add("on");$("close").focus()}
 function inspectCard(){if(!I)initI();I.cur=null;setHover(null);while(I.g.children.length)I.g.remove(I.g.children[0]);if(I.card){I.scene.remove(I.card);I.card=null}I.disc=null;I.dspin=null;I.closing=0;
 var E=I.env,ce=M(0xf3eee2,.9,0,0,0,E),cf=M(0xffffff,.7,0,0,0,E),cb=M(0xffffff,.8,0,0,0,E);loadTex("covers/wywh-postcard.jpg",cf);loadTex("covers/wywh-postcard-back.jpg",cb);I.g.add(new T.Mesh(new T.BoxGeometry(.3,.2,.0014),[ce,ce,ce,ce,cf,cb]));
-I.yaw=-.5;I.ty=0;I.pt=0;I.tp=0;I.out=0;I.to=0;$("it").textContent="Wish You Were Here";$("ia").textContent="Postcard";$("im").textContent="Hipgnosis  ·  Mono Lake, California, 1975";$("iw").textContent="It came tucked inside the Wish You Were Here sleeve. Now it lives on the shelf.";
+I.yaw=-.5;I.ty=0;I.pt=0;I.tp=0;I.out=0;I.to=0;$("it").textContent="Wish You Were Here";$("ia").textContent="Postcard";$("im").textContent="Hipgnosis  ·  Mono Lake, California, 1975";$("iw").textContent="";
 $("play").hidden=true;$("slide").hidden=true;$("flip").hidden=false;$("spot").hidden=true;inspecting=true;$("name").classList.add("off");$("inspect").classList.remove("closing");$("inspect").classList.add("on");$("close").focus()}
 function closeI(){if(!inspecting)return;inspecting=false;I.closing=performance.now();$("inspect").classList.add("closing");if(!focus)$("name").classList.remove("off");unpull();setTimeout(function(){if(inspecting)return;$("inspect").classList.remove("on");$("inspect").classList.remove("closing");I.closing=0;I.g.position.y=0;I.g.scale.setScalar(1)},520)}
 $("close").onclick=closeI;

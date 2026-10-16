@@ -238,5 +238,23 @@ s=s.replace(a,'cx:(w.x+1)/2*ren.domElement.clientWidth,cy:(1-w.y)/2*ren.domEleme
 a='started=true;perf(t)}'
 assert s.count(a)==1
 s=s.replace(a,'started=true;edgeSample(t);perf(t)}var EDG={t:0,on:matchMedia("(pointer:coarse)").matches,buf:null};function edgeSample(t){if(!EDG.on||t-EDG.t<500)return;EDG.t=t;var g=ren.getContext(),W=g.drawingBufferWidth,H=g.drawingBufferHeight;if(!EDG.buf||EDG.buf.length!==W*4)EDG.buf=new Uint8Array(W*4);ren.setRenderTarget(null);g.readPixels(0,H-1,W,1,g.RGBA,g.UNSIGNED_BYTE,EDG.buf);var r=0,gg=0,b=0,n=0;for(var i=0;i<W*4;i+=16){r+=EDG.buf[i];gg+=EDG.buf[i+1];b+=EDG.buf[i+2];n++}document.documentElement.style.background="rgb("+Math.round(r/n)+","+Math.round(gg/n)+","+Math.round(b/n)+")"}')
+# rug: kilim border with a Galaga formation in the centre
+i0=s.index('function rugArt(S){');j0=s.index('return[t0,t1]}',i0)+len('return[t0,t1]}')
+s=s[:i0]+open('parts/rug.js').read().split('\n',2)[2].rstrip('\n')+s[j0:]
+# postcard: just the Hipgnosis credit
+a='$("iw").textContent="It came tucked inside the Wish You Were Here sleeve. Now it lives on the shelf.";'
+assert s.count(a)==1
+s=s.replace(a,'$("iw").textContent="";')
+# lava lamp card: the line follows whether the room is lit or dark
+a='lamp:{t:"Mood",x:"Switch the light to see the room at night.",b:"Switch the light"}'
+assert s.count(a)==1
+s=s.replace(a,'lamp:{t:"Mood",x:function(){return night?"Turn the lights back on to see the room by day.":"Switch the light to see the room at night."},b:"Switch the light"}')
+a='if(tag==="lamp"){night=!night;$("go").textContent=night?"Turn the lights back on":"Switch the light"}'
+assert s.count(a)==1
+s=s.replace(a,'if(tag==="lamp"){night=!night;$("go").textContent=night?"Turn the lights back on":"Switch the light";var lp_=sheet.querySelector("p");if(lp_)lp_.textContent=TG.lamp.x()}')
+# TV: first-time visitors land on the channel named in TV_START
+a='\ntune(0);\n'
+assert s.count(a)==1
+s=s.replace(a,'\ntune(Math.max(0,TV_CHANNELS.map(function(c){return c.src}).indexOf(TV_START)));\n')
 open('main.js','w').write(s)
 print('ok',len(s))
