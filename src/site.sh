@@ -8,6 +8,8 @@ echo '<!doctype html>'
 echo '<html lang="en"><head>'
 echo '<meta charset="utf-8">'
 echo '<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">'
+echo '<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">'
+echo '<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Xavier Ruiz">'
 echo '<meta name="description" content="Xavier Ruiz, Product Marketing Specialist in Boston. Click around the room to learn more about me.">'
 sed 's#<title>The Room (3D)</title>#<title>Xavier Ruiz</title>#' the-room.html
 } > ../index.html
