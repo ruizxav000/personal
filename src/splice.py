@@ -238,13 +238,13 @@ s=s.replace(a,'cx:(w.x+1)/2*ren.domElement.clientWidth,cy:(1-w.y)/2*ren.domEleme
 a='started=true;perf(t)}'
 assert s.count(a)==1
 s=s.replace(a,'started=true;edgeSample(t);perf(t)}var EDG={t:0,on:matchMedia("(pointer:coarse)").matches,buf:null};function edgeSample(t){if(!EDG.on||t-EDG.t<500)return;EDG.t=t;var g=ren.getContext(),W=g.drawingBufferWidth,H=g.drawingBufferHeight;if(!EDG.buf||EDG.buf.length!==W*4)EDG.buf=new Uint8Array(W*4);ren.setRenderTarget(null);g.readPixels(0,H-1,W,1,g.RGBA,g.UNSIGNED_BYTE,EDG.buf);var r=0,gg=0,b=0,n=0;for(var i=0;i<W*4;i+=16){r+=EDG.buf[i];gg+=EDG.buf[i+1];b+=EDG.buf[i+2];n++}document.documentElement.style.background="rgb("+Math.round(r/n)+","+Math.round(gg/n)+","+Math.round(b/n)+")"}')
-# rug: the Galaga kilim photo, at its own tall proportions, running from the wall toward the viewer
+# rug: the Galaga kilim photo, turned to lie long ways across the room
 a='var RUGW=2.05,RUGD=1.46;'
 assert s.count(a)==1
-s=s.replace(a,'var RUGW=1.5,RUGD=2.13;')
+s=s.replace(a,'var RUGW=2.13,RUGD=1.5;')
 a='M(0x6e6a64,1)],.28,.003,.56);'
 assert s.count(a)==1
-s=s.replace(a,'M(0x3a2a20,1)],.28,.003,.895);')
+s=s.replace(a,'M(0x3a2a20,1)],.28,.003,.58);')
 i0=s.index('function rugArt(S){');j0=s.index('return[t0,t1]}',i0)+len('return[t0,t1]}')
 s=s[:i0]+open('parts/rug.js').read().split('\n',2)[2].rstrip('\n')+s[j0:]
 # postcard: just the Hipgnosis credit
