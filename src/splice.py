@@ -219,5 +219,19 @@ for h,v in SEEDS:
     i=s.find('\n'+h)
     assert i>=0,h
     s=s[:i+1]+'seed=%d;'%v+s[i+1:]
+# canvas can be taller than the visible area (it runs behind mobile browser bars): size from the canvas element and
+# map pointers through its rect instead of innerWidth/innerHeight
+a='m2.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1)'
+assert s.count(a)==2
+s=s.replace(a,'NDC(e)')
+a='function size(){'
+assert s.count(a)==1
+s=s.replace(a,'function NDC(e){var r=ren.domElement.getBoundingClientRect();m2.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1)}'+a)
+a='var w=innerWidth,h=innerHeight,a=w/h;ren.setSize(w,h);'
+assert s.count(a)==1
+s=s.replace(a,'var w=ren.domElement.clientWidth||innerWidth,h=ren.domElement.clientHeight||innerHeight,a=w/h;ren.setSize(w,h,false);')
+a='cx:(w.x+1)/2*innerWidth,cy:(1-w.y)/2*innerHeight,'
+assert s.count(a)==1
+s=s.replace(a,'cx:(w.x+1)/2*ren.domElement.clientWidth,cy:(1-w.y)/2*ren.domElement.clientHeight,')
 open('main.js','w').write(s)
 print('ok',len(s))
