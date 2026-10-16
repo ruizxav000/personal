@@ -353,12 +353,12 @@ function baseboard(len){var s=new T.Shape();s.moveTo(0,0);s.lineTo(.013,0);s.lin
 var BB=M(0xf3f1ec,.34);
 var bg1=baseboard(RX-LX);bg1.rotateY(-PI/2);mesh(bg1,BB,RX,0,BZ);mesh(baseboard(WZ0-BZ),BB,LX,0,BZ);mesh(baseboard(FZ-WZ0),BB,LX,0,WZ0);
 seed=-2096445971;// ---------- tufted rug: warped black-and-white checkerboard ----------
-var RUGW=1.5,RUGD=2.13;
+var RUGW=2.13,RUGD=1.5;
 function rugArt(S){var W=Math.round(S*RUGW/RUGD),H=S,C=[cvs(W,H),cvs(W,H)],c=C[0].getContext("2d"),b=C[1].getContext("2d");
 c.fillStyle="#2c2622";c.fillRect(0,0,W,H);b.fillStyle=gray(.5);b.fillRect(0,0,W,H);
 var t0=ctex(C[0]),t1=ctex(C[1],1);[t0,t1].forEach(function(t){t.repeat.set(1/RUGW,1/RUGD);t.offset.set(.5,.5)});
 var im=new Image();im.onload=function(){var cr=5;// trim the photo's outline
-c.imageSmoothingQuality="high";c.drawImage(im,cr,cr,im.width-2*cr,im.height-2*cr,0,0,W,H);
+c.imageSmoothingQuality="high";c.save();c.translate(0,H);c.rotate(-PI/2);c.drawImage(im,cr,cr,im.width-2*cr,im.height-2*cr,0,0,H,W);c.restore();// turned a quarter to the left: lies long ways
 var img=c.getImageData(0,0,W,H),d=img.data,bi=b.createImageData(W,H),bd=bi.data,K=W/150;// ~150 knots across
 for(var py=0;py<H;py++){var fy=py/K%1;for(var px=0;px<W;px++){var fx=px/K%1,tf=Math.max(0,1-Math.hypot(fx-.5,fy-.5)*1.7),n=(Math.random()-.5)*12,i=(py*W+px)*4,
 l=(d[i]+d[i+1]+d[i+2])/765;for(var ch=0;ch<3;ch++)d[i+ch]=Math.max(0,Math.min(255,d[i+ch]*(.86+.2*tf)+n));
@@ -368,7 +368,7 @@ im.src="media/rug.webp";return[t0,t1]}
 var RG=rugArt(MOB?1000:1600),rs_=new T.Shape(),RR=.05,hw=RUGW/2,hd_=RUGD/2;
 rs_.moveTo(-hw+RR,-hd_);rs_.lineTo(hw-RR,-hd_);rs_.quadraticCurveTo(hw,-hd_,hw,-hd_+RR);rs_.lineTo(hw,hd_-RR);rs_.quadraticCurveTo(hw,hd_,hw-RR,hd_);rs_.lineTo(-hw+RR,hd_);rs_.quadraticCurveTo(-hw,hd_,-hw,hd_-RR);rs_.lineTo(-hw,-hd_+RR);rs_.quadraticCurveTo(-hw,-hd_,-hw+RR,-hd_);
 var rgeo=new T.ExtrudeGeometry(rs_,{depth:.006,bevelEnabled:true,bevelThickness:.003,bevelSize:.006,bevelSegments:3,curveSegments:6});rgeo.rotateX(-PI/2);
-var rug=mesh(rgeo,[M(0xffffff,1,0,{map:RG[0],bumpMap:RG[1],bumpScale:.007}),M(0x3a2a20,1)],.28,.003,.895);rug.castShadow=false;
+var rug=mesh(rgeo,[M(0xffffff,1,0,{map:RG[0],bumpMap:RG[1],bumpScale:.007}),M(0x3a2a20,1)],.28,.003,.58);rug.castShadow=false;
 
 // ================= shelf (2 x 3 cubes) =================
 var WH=M(0xf5f4f0,.45),shelf=grp(0,0,0,0);
