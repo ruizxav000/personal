@@ -233,10 +233,10 @@ s=s.replace(a,'var w=ren.domElement.clientWidth||innerWidth,h=ren.domElement.cli
 a='cx:(w.x+1)/2*innerWidth,cy:(1-w.y)/2*innerHeight,'
 assert s.count(a)==1
 s=s.replace(a,'cx:(w.x+1)/2*ren.domElement.clientWidth,cy:(1-w.y)/2*ren.domElement.clientHeight,')
-# phones: Safari paints its status bar and the strip under its toolbar from what touches the screen edges, so two thin
-# fixed strips take the colour of the room's top and bottom rows (sampled a couple of times a second) to keep them flush
+# phones: Safari paints its status bar from the page background, so keep that matched to the room's top row
+# (sampled a couple of times a second)
 a='started=true;perf(t)}'
 assert s.count(a)==1
-s=s.replace(a,'started=true;edgeSample(t);perf(t)}var EDG={t:0,on:matchMedia("(pointer:coarse)").matches,T:null,B:null,buf:null};function edgeSample(t){if(!EDG.on||t-EDG.t<500)return;EDG.t=t;if(!EDG.T){EDG.T=document.createElement("div");EDG.B=document.createElement("div");[EDG.T,EDG.B].forEach(function(d,i){d.style.cssText="position:fixed;left:0;right:0;height:2px;z-index:1;pointer-events:none;"+(i?"bottom:0":"top:0");document.body.appendChild(d)})}var g=ren.getContext(),W=g.drawingBufferWidth,H=g.drawingBufferHeight;if(!EDG.buf||EDG.buf.length!==W*4)EDG.buf=new Uint8Array(W*4);ren.setRenderTarget(null);function row(y){g.readPixels(0,y,W,1,g.RGBA,g.UNSIGNED_BYTE,EDG.buf);var r=0,gg=0,b=0,n=0;for(var i=0;i<W*4;i+=16){r+=EDG.buf[i];gg+=EDG.buf[i+1];b+=EDG.buf[i+2];n++}return "rgb("+Math.round(r/n)+","+Math.round(gg/n)+","+Math.round(b/n)+")"}var top=row(H-1),bot=row(0);EDG.T.style.background=top;EDG.B.style.background=bot;document.documentElement.style.background=top}')
+s=s.replace(a,'started=true;edgeSample(t);perf(t)}var EDG={t:0,on:matchMedia("(pointer:coarse)").matches,buf:null};function edgeSample(t){if(!EDG.on||t-EDG.t<500)return;EDG.t=t;var g=ren.getContext(),W=g.drawingBufferWidth,H=g.drawingBufferHeight;if(!EDG.buf||EDG.buf.length!==W*4)EDG.buf=new Uint8Array(W*4);ren.setRenderTarget(null);g.readPixels(0,H-1,W,1,g.RGBA,g.UNSIGNED_BYTE,EDG.buf);var r=0,gg=0,b=0,n=0;for(var i=0;i<W*4;i+=16){r+=EDG.buf[i];gg+=EDG.buf[i+1];b+=EDG.buf[i+2];n++}document.documentElement.style.background="rgb("+Math.round(r/n)+","+Math.round(gg/n)+","+Math.round(b/n)+")"}')
 open('main.js','w').write(s)
 print('ok',len(s))

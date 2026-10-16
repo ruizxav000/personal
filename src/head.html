@@ -65,7 +65,7 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;paddin
 .info{position:absolute;left:12px;right:12px;bottom:calc(env(safe-area-inset-bottom,0px) + 12px);max-width:520px;margin:0 auto;background:var(--card);border-radius:18px;padding:16px;box-shadow:0 12px 40px #0003}
 .info h3{margin:0;font-size:21px;line-height:1.15}.info .by{margin:3px 0 0;font-size:15px}
 .info .meta{margin:6px 0 0;color:var(--muted);font-size:13.5px}.info .note{margin:8px 0 0;color:var(--muted);font-size:14px;line-height:1.45}
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media (pointer:coarse){body{height:calc(100vh + env(safe-area-inset-bottom,0px) + 72px);height:calc(100lvh + env(safe-area-inset-bottom,0px) + 72px)}}@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 <canvas id="c" aria-label="A 3D view of a white cube shelf with a turntable, a lava lamp, a plant and a record collection"></canvas>
 <div id="vig"></div><div class="tip" id="tip" hidden></div>
