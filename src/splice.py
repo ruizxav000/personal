@@ -244,7 +244,10 @@ assert s.count(a)==1
 s=s.replace(a,'var RUGW=2.13,RUGD=1.5;')
 a='M(0x6e6a64,1)],.28,.003,.56);'
 assert s.count(a)==1
-s=s.replace(a,'M(0x3a2a20,1)],.28,.003,.88);')
+s=s.replace(a,'M(0x3a2a20,1)],.28,.003,.73);')
+a='rug.castShadow=false;'
+assert s.count(a)==1
+s=s.replace(a,a+'rug.rotation.y=.12;')# a casual angle, not squared to the floorboards
 i0=s.index('function rugArt(S){');j0=s.index('return[t0,t1]}',i0)+len('return[t0,t1]}')
 s=s[:i0]+open('parts/rug.js').read().split('\n',2)[2].rstrip('\n')+s[j0:]
 # postcard: just the Hipgnosis credit
