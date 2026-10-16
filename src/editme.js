@@ -6,7 +6,7 @@ var ABOUT={"title": "Home", "text": "Howdy! I'm Xavier Ruiz, a Boston based Prod
 // "halloween", "fall", "holiday", "winter", "spring", "summer"  (null = follow the calendar)
 var SEASON_OVERRIDE=null;
 // What's on the turntable when the page loads (a record id from RECS)
-var NOW_ID="carti",NOW_SINCE="Sunday";
+var NOW_ID="7435327",NOW_SINCE="Sunday";
 // The collection. g = which shelf pocket it lives in: "hiphop", "rock" or "misc".
 // fc/bc = front/back cover images; records without one get a printed placeholder.
 // lb = a photo of just the centre label (square, label filling the frame)
