@@ -150,3 +150,6 @@ for(var i=0;i<5;i++){var sp=stemC.getPointAt(.12+i*.18),sh=mesh(new T.CylinderGe
 var ROOT=M(0x6a5a40,.75);[[[-.006,.5,.012],[.06,.5,.08],[.12,.42,.14],[.15,.31,.15]],[[-.012,.64,.016],[-.07,.6,.06],[-.1,.48,.1],[-.11,.31,.12]],[[-.014,.76,.014],[-.03,.745,.004],[-.052,.72,-.004],[-.066,.69,-.02]]].forEach(function(P){taperTube(new T.CatmullRomCurve3(P.map(function(p){return new T.Vector3().fromArray(p)})),.0062,.0038,ROOT)});
 })();
 function plantSway(t,g){LEAVES.forEach(function(Lf){var w=Math.sin(t*.0009+Lf.i*1.7)*.018+Math.sin(t*.0023+Lf.i)*.008+g*.03*Math.sin(t*.003+Lf.i*.6);Lf.g.rotation.x=Lf.rx+w;Lf.g.rotation.z=Lf.rz+w*.6})}
+// the rug's back corner runs under the saucer: once the leaves are placed (their layout is checked in room space, so this
+// has to come last), lift and rock the whole plant ~2 degrees so it sits on the floor on one side and the rug on the other
+fig.position.y+=.006;fig.quaternion.premultiply(new T.Quaternion().setFromAxisAngle(new T.Vector3(-.28,0,.96).normalize(),.0375));
