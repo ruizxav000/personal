@@ -109,7 +109,7 @@ assert s.count(a)==1
 s=s.replace(a,'if(tag==="bean"){var PB=pk(focus);if(PB){focus=null;layPocket(PB)}focus="bean";goal({p:[-.36,.74,1.5],t:[.18,.62,.05]});yaw=pit=0;$("name").classList.add("off");sheet.classList.remove("on");$("back").hidden=false;return}'+a)
 a='var lim=focus?.35:.2,rl=focus?.2:.08;'
 assert s.count(a)==1
-s=s.replace(a,'var lim=focus==="bean"?.75:focus?.35:.2,rl=focus==="bean"?0:focus?.2:.08;')
+s=s.replace(a,'var lim=focus==="bean"?.75:focus?.35:.2-HYAW,rl=focus==="bean"?0:focus?.2:.08+HYAW;')
 # a wider lens while seated, eased in and out
 a='cam.fov=a<1?50:38;'
 assert s.count(a)==1
@@ -118,10 +118,21 @@ s=s.replace('var cp=new T.Vector3(),','var BFOV=38,FOVX=0,cp=new T.Vector3(),',1
 a='cam.lookAt(cam.position.clone().add(dir));'
 assert s.count(a)==1
 s=s.replace(a,a+'var fx=focus==="bean"?16:0;if(Math.abs(fx-FOVX)>.01){FOVX+=(fx-FOVX)*Math.min(1,dt*3);cam.fov=BFOV+FOVX;cam.updateProjectionMatrix()}')
-# default view: more centered on the room, with a slightly wider lens, so the floor lamp by the window fits
-a='var t=a<1?[.05,.7,0]:[-.08,.86,0],dir=a<1?new T.Vector3(1.0,.55,2.1):new T.Vector3(1.2,.72,2.1)'
+# default desktop view: turned a little toward the floor lamp and tilted slightly down (the angle you'd get by dragging
+# fully left), so the lamp, bean bag, shelf and TV all fit; the drag range keeps the same absolute limits as before
+a='V.home.t=t;V.home.p=[t[0]+dir.x*k,t[1]+dir.y*k,t[2]+dir.z*k];'
 assert s.count(a)==1
-s=s.replace(a,a)
+s=s.replace(a,a+'if(a>=1){var hd=new T.Vector3().fromArray(t).sub(new T.Vector3().fromArray(V.home.p)),hs=new T.Spherical().setFromVector3(hd);hs.theta+=HYAW;hs.phi+=HPIT;hd.setFromSpherical(hs);V.home.t=[V.home.p[0]+hd.x,V.home.p[1]+hd.y,V.home.p[2]+hd.z]}else HYAW=HPIT=0;')
+a='function size(){'
+assert s.count(a)==1
+s=s.replace(a,'var HYAW=.2,HPIT=.06;'+a)
+# narrower desktop windows step back so they keep the same framing as a wide (2:1) screen
+a='Math.max(1.36,1.85/a)'
+assert s.count(a)==1
+s=s.replace(a,'Math.min(1.85,Math.max(1.36,2.72/a))')
+a='pit=Math.max(-.3,Math.min(focus?.18:.06,'
+assert s.count(a)==1
+s=s.replace(a,'pit=Math.max(focus?-.3:-.3+HPIT,Math.min(focus?.18:.06+HPIT,')
 
 assert s.count('Math.tan(cam.fov*PI/360)')==2
 s=s.replace('Math.tan(cam.fov*PI/360)','Math.tan(BFOV*PI/360)')
