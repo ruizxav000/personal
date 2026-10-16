@@ -368,7 +368,7 @@ im.src="media/rug.webp";return[t0,t1]}
 var RG=rugArt(MOB?1000:1600),rs_=new T.Shape(),RR=.05,hw=RUGW/2,hd_=RUGD/2;
 rs_.moveTo(-hw+RR,-hd_);rs_.lineTo(hw-RR,-hd_);rs_.quadraticCurveTo(hw,-hd_,hw,-hd_+RR);rs_.lineTo(hw,hd_-RR);rs_.quadraticCurveTo(hw,hd_,hw-RR,hd_);rs_.lineTo(-hw+RR,hd_);rs_.quadraticCurveTo(-hw,hd_,-hw,hd_-RR);rs_.lineTo(-hw,-hd_+RR);rs_.quadraticCurveTo(-hw,-hd_,-hw+RR,-hd_);
 var rgeo=new T.ExtrudeGeometry(rs_,{depth:.006,bevelEnabled:true,bevelThickness:.003,bevelSize:.006,bevelSegments:3,curveSegments:6});rgeo.rotateX(-PI/2);
-var rug=mesh(rgeo,[M(0xffffff,1,0,{map:RG[0],bumpMap:RG[1],bumpScale:.007}),M(0x3a2a20,1)],.28,.003,.58);rug.castShadow=false;
+var rug=mesh(rgeo,[M(0xffffff,1,0,{map:RG[0],bumpMap:RG[1],bumpScale:.007}),M(0x3a2a20,1)],.28,.003,.88);rug.castShadow=false;
 
 // ================= shelf (2 x 3 cubes) =================
 var WH=M(0xf5f4f0,.45),shelf=grp(0,0,0,0);
