@@ -34,7 +34,7 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;paddin
 .about .eyebrow{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--muted)}
 .about h2{margin:4px 0 0;font-size:30px;line-height:1.1}
 .about p{margin:12px 0 0;font-size:15.5px;line-height:1.55;color:var(--ink)}
-.about p.hi{font-weight:600}.about p+p{margin-top:10px;font-size:14.5px;color:var(--muted)}
+.about p.hi{font-weight:600}.about .more{display:grid;grid-template-rows:1fr;transition:grid-template-rows .35s cubic-bezier(.22,.7,.2,1)}.about .more>div{overflow:hidden;min-height:0}.about .amore{display:none;position:absolute;top:14px;right:14px;width:30px;height:30px;align-items:center;justify-content:center;padding:0;border:0;border-radius:50%;background:rgba(127,127,127,.14);color:var(--muted);cursor:pointer}.about .amore svg{transition:transform .3s}.about p+p{margin-top:10px;font-size:14.5px;color:var(--muted)}
 .about .connect{margin-top:18px;padding-top:14px;border-top:1px solid rgba(127,127,127,.22)}
 .about .lbl{font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;font-weight:700;color:var(--muted);margin-bottom:6px}
 .about .crow{display:flex;align-items:center;gap:10px;padding:6px 0}
@@ -42,7 +42,7 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;paddin
 .about .crow a{color:var(--ink);font-weight:600;text-decoration:none;min-width:0;overflow-wrap:anywhere}.about .crow a:hover{text-decoration:underline}
 .about .ext{color:var(--muted);font-weight:400}
 .about #aem{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:14.5px}
-@media (max-width:720px){.about{top:auto;right:12px;left:12px;width:auto;margin:0 auto;max-width:520px;bottom:calc(env(safe-area-inset-bottom,0px) + 74px);max-height:58%;transform:translateY(24px)}.about.on{transform:none}.about h2{font-size:24px}.about p{font-size:14.5px}.about #aem{font-size:12.5px}}
+@media (max-width:720px){.about{top:auto;right:12px;left:12px;width:auto;margin:0 auto;max-width:520px;bottom:calc(env(safe-area-inset-bottom,0px) + 74px);max-height:58%;transform:translateY(24px)}.about.on{transform:none}.about h2{font-size:24px}.about p{font-size:14.5px}.about #aem{font-size:12.5px}.about .amore{display:flex}.about h2{padding-right:40px}.about .more{grid-template-rows:0fr}.about.open .more{grid-template-rows:1fr}.about.open .amore svg{transform:rotate(180deg)}}
 
 #sheet .lede{display:block;color:var(--ink);font-size:15.5px;line-height:1.5;max-width:46ch}
 #sheet .connect{display:block;margin-top:14px;padding-top:12px;border-top:1px solid rgba(127,127,127,.22)}
@@ -94,7 +94,7 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;paddin
 // Who's in the room
 var ME={name:"Xavier Ruiz",role:"Product Marketing Specialist"};
 // The little house on the shelf opens this card
-var ABOUT={"title": "Home", "text": "Howdy! I'm Xavier Ruiz, a Boston based Product Marketer for ServiceNow. Welcome to my page!", "bio": ["I work where product, data and storytelling meet. At ServiceNow I help bring products to market: shaping the messaging and positioning behind launches, building the dashboards that show what's working, and running the tests and customer research that turn insight into what we build next.", "I studied Technology Management at Texas A&M. I grew up a musician, playing guitar and violin for more than ten years, and these days that creative streak goes into building things with AI, like this room. The records on the shelf are my actual collection, so pull one out and have a look. Almost everything on the page is interactive, so click around to learn more about me."], "email": "xavier.ruiz@servicenow.com", "linkedin": "https://www.linkedin.com/in/xavier-ruiz-0b1617201"};
+var ABOUT={"title": "Home", "text": "Howdy! I'm Xavier Ruiz, a Boston based Product Marketer for ServiceNow. Welcome to my page!", "bio": ["My focus is competitive positioning: turning market and competitive intel into evidence-backed arguments our sellers can use to frame a deal before the competition does. Behind the scenes, I build the data pipelines and automations that keep that intel fresh and take the manual work out of it.", "I studied Technology Management at Texas A&M which made me both love and hate programming. I grew up a musician, playing guitar and violin for 10+ years, and these days that creative streak goes into building things with AI (like this room). The records on the shelf are my actual collection, so pull one out and have a look. Almost everything on the page is interactive ff to click around to learn more about me."], "email": "xavier.ruiz@servicenow.com", "linkedin": "https://www.linkedin.com/in/xavier-ruiz-0b1617201"};
 // The house dresses up for the time of year on its own. To preview another look, set one of:
 // "halloween", "fall", "holiday", "winter", "spring", "summer"  (null = follow the calendar)
 var SEASON_OVERRIDE=null;
@@ -1216,9 +1216,13 @@ function pk(tag){return tag&&tag.indexOf("pk:")===0?PK.filter(function(P){return
 function hint(){$("hint").classList.add("off")}
 $("back").onclick=step;
 // the house's about panel on the right
-function aboutPanel(){var A=ABOUT,el=$("about");el.innerHTML='<h2>'+esc(A.title)+'</h2><p class="hi">'+esc(A.text)+'</p>'+(A.bio||[]).map(function(t){return '<p>'+esc(t)+'</p>'}).join('')+
+// on phones the panel opens collapsed to the greeting so the house stays visible; the arrow reveals the rest
+function aboutPanel(){var A=ABOUT,el=$("about");el.classList.remove("open");el.innerHTML='<h2>'+esc(A.title)+'</h2><p class="hi">'+esc(A.text)+'</p>'+
+'<button class="amore" type="button" aria-expanded="false" aria-label="More about me"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>'+
+'<div class="more"><div>'+(A.bio||[]).map(function(t){return '<p>'+esc(t)+'</p>'}).join('')+
 '<div class="connect"><div class="lbl">Let’s connect</div><div class="crow"><span class="ico"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M4 7l8 6 8-6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></span><a id="aem" href="mailto:'+esc(A.email)+'">'+esc(A.email)+'</a></div>'+
-'<div class="crow"><span class="ico">in</span><a href="'+esc(A.linkedin)+'" target="_blank" rel="noopener">LinkedIn profile<span class="ext" aria-hidden="true"> ↗</span></a></div></div>';
+'<div class="crow"><span class="ico">in</span><a href="'+esc(A.linkedin)+'" target="_blank" rel="noopener">LinkedIn profile<span class="ext" aria-hidden="true"> ↗</span></a></div></div></div></div>';
+var b=el.querySelector(".amore");b.onclick=function(){var o=el.classList.toggle("open");b.setAttribute("aria-expanded",o);b.setAttribute("aria-label",o?"Show less":"More about me")};
 }
 function step(){$("about").classList.remove("on");$("back").hidden=true;var P0=pk(focus);focus=null;if(P0)layPocket(P0);goal(V.home);yaw=pit=0;sheet.classList.remove("on");$("name").classList.remove("off")}
 function fitView(cx,cy,cz,nx,nz,w,h){var tf=Math.tan(BFOV*PI/360),dist=Math.max((h+.14)/(2*tf),(w+.14)/(2*tf*cam.aspect));return{p:[cx+nx*dist,cy,cz+nz*dist],t:[cx,cy,cz]}}
