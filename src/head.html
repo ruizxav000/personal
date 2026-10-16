@@ -1,0 +1,79 @@
+<title>The Room (3D)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,700&family=Caveat:wght@600&family=Cormorant+Garamond:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--ink:#1d2226;--muted:#5d6871;--card:rgba(252,251,248,.93);--paper:#fbfaf7}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#eef0f2;--muted:#a5aeb6;--card:rgba(28,32,37,.92);--paper:#20252a}}
+:root[data-theme="dark"]{--ink:#eef0f2;--muted:#a5aeb6;--card:rgba(28,32,37,.92);--paper:#20252a}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;overflow:hidden;background:#d6d0c6;font-family:"Bricolage Grotesque",system-ui,sans-serif;color:var(--ink)}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;padding:0}
+:focus-visible{outline:3px solid #e9a23b;outline-offset:2px}
+#c{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab}
+@keyframes ping{from{transform:scale(1);opacity:.9}to{transform:scale(2.2);opacity:0}}
+#vig{position:fixed;inset:0;pointer-events:none;z-index:2;background:radial-gradient(125% 95% at 50% 48%,transparent 60%,rgba(20,18,16,.18))}
+.name{position:fixed;left:clamp(20px,3.2vw,56px);right:16px;bottom:calc(env(safe-area-inset-bottom,0px) + clamp(22px,5vh,56px));z-index:3;pointer-events:none;transition:opacity .5s;color:#f6f2eb}
+.name h1{margin:0;font-size:clamp(50px,7.4vw,120px);line-height:.88;letter-spacing:-.045em;font-weight:700}
+.name p{margin:clamp(8px,1.2vw,18px) 0 0;color:#ece6dc;font-size:clamp(17px,2vw,30px);letter-spacing:-.005em;font-weight:400}.name{text-shadow:0 1px 2px rgba(0,0,0,.35),0 2px 22px rgba(0,0,0,.4)}
+
+.hint{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 16px);transform:translateX(-50%);z-index:3;background:rgba(20,20,22,.6);color:#fff;font-size:13px;padding:8px 14px;border-radius:99px;white-space:nowrap;pointer-events:none;transition:opacity .5s}
+.off{opacity:0!important}
+.back{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 22px);z-index:6;background:rgba(18,18,20,.62);color:#fff;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 6px 20px #0004}
+.tip{position:fixed;left:0;top:0;z-index:4;pointer-events:none;background:rgba(18,18,20,.72);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#fff;font-size:13px;font-weight:700;padding:6px 11px;border-radius:99px;white-space:nowrap;transform:translate(14px,14px)}.tip span{font-weight:400;opacity:.75;margin-left:6px}
+#c.hov{cursor:pointer}
+.strip button{position:relative}.strip button b{position:absolute;left:4px;top:3px;font-size:12px;color:#fff;text-shadow:0 1px 3px #000}.strip button.cur{outline:3px solid var(--ink);outline-offset:2px}
+#sheet{position:fixed;left:12px;right:12px;bottom:calc(env(safe-area-inset-bottom,0px) + 12px);max-width:520px;margin:0 auto;z-index:5;background:var(--card);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-radius:18px;padding:16px;box-shadow:0 12px 40px #0004;transform:translateY(150%);transition:transform .5s cubic-bezier(.22,.7,.2,1)}
+#sheet.on{transform:none}
+.about{position:fixed;z-index:5;right:clamp(16px,4vw,56px);top:50%;width:min(410px,calc(100vw - 32px));max-height:calc(100% - 140px);overflow:auto;background:var(--card);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-radius:20px;padding:22px 22px 18px;box-shadow:0 16px 48px #0005;opacity:0;pointer-events:none;transform:translate(28px,-50%);transition:opacity .45s ease,transform .55s cubic-bezier(.22,.7,.2,1)}
+.about.on{opacity:1;pointer-events:auto;transform:translate(0,-50%)}
+.about .eyebrow{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--muted)}
+.about h2{margin:4px 0 0;font-size:30px;line-height:1.1}
+.about p{margin:12px 0 0;font-size:15.5px;line-height:1.55;color:var(--ink)}
+.about p.hi{font-weight:600}.about p+p{margin-top:10px;font-size:14.5px;color:var(--muted)}
+.about .connect{margin-top:18px;padding-top:14px;border-top:1px solid rgba(127,127,127,.22)}
+.about .lbl{font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;font-weight:700;color:var(--muted);margin-bottom:6px}
+.about .crow{display:flex;align-items:center;gap:10px;padding:6px 0}
+.about .ico{flex:none;width:32px;height:32px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;background:rgba(127,127,127,.14);font-weight:800;font-size:13px;color:var(--ink)}
+.about .crow a{color:var(--ink);font-weight:600;text-decoration:none;min-width:0;overflow-wrap:anywhere}.about .crow a:hover{text-decoration:underline}
+.about .ext{color:var(--muted);font-weight:400}
+.about #aem{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:14.5px}
+@media (max-width:720px){.about{top:auto;right:12px;left:12px;width:auto;margin:0 auto;max-width:520px;bottom:calc(env(safe-area-inset-bottom,0px) + 74px);max-height:58%;transform:translateY(24px)}.about.on{transform:none}.about h2{font-size:24px}.about p{font-size:14.5px}.about #aem{font-size:12.5px}}
+
+#sheet .lede{display:block;color:var(--ink);font-size:15.5px;line-height:1.5;max-width:46ch}
+#sheet .connect{display:block;margin-top:14px;padding-top:12px;border-top:1px solid rgba(127,127,127,.22)}
+#sheet .lbl{display:block;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;font-weight:700;color:var(--muted);margin-bottom:6px}
+#sheet .crow{display:flex;align-items:center;gap:10px;padding:5px 0;color:var(--ink)}
+#sheet .ico{flex:none;width:30px;height:30px;border-radius:9px;display:inline-flex;align-items:center;justify-content:center;background:rgba(127,127,127,.14);font-weight:800;font-size:13px}
+#sheet .crow a{color:var(--ink);font-weight:600;text-decoration:none;min-width:0;overflow-wrap:anywhere}
+#sheet .crow a:hover{text-decoration:underline}
+#sheet .ext{color:var(--muted);font-weight:400}
+.btn.sm{padding:5px 11px;font-size:12.5px;margin-left:auto;flex:none}
+#sheet a{color:inherit;text-decoration:underline;text-underline-offset:2px;word-break:break-word}
+#sheet h2{margin:0;font-size:20px}#sheet p{margin:6px 0 0;color:var(--muted);font-size:14.5px;line-height:1.45}
+.row{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+.btn{padding:10px 16px;border-radius:99px;background:var(--ink);color:var(--paper);font-weight:700;font-size:14px}
+.btn.spot{display:inline-flex;align-items:center;justify-content:center;padding:8px;background:#000;text-decoration:none}
+.btn.ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink)}
+.strip{display:flex;gap:8px;overflow-x:auto;margin-top:12px;padding-bottom:4px;scrollbar-width:none}
+.strip::-webkit-scrollbar{display:none}
+.strip button{flex:none;width:68px;height:68px;border-radius:2px;background-size:cover;background-position:center;box-shadow:0 4px 8px #0003}
+#inspect{position:fixed;inset:0;z-index:10;display:none;background:rgba(10,10,12,.12);backdrop-filter:blur(12px) saturate(1.1);-webkit-backdrop-filter:blur(12px) saturate(1.1)}
+#inspect.on{display:block;animation:fade .35s}
+#inspect.closing{animation:fadeout .42s cubic-bezier(.4,0,.2,1) forwards;pointer-events:none}@keyframes fadeout{from{opacity:1}to{opacity:0}}
+@keyframes fade{from{opacity:0}}
+#ic{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab}
+.info{position:absolute;left:12px;right:12px;bottom:calc(env(safe-area-inset-bottom,0px) + 12px);max-width:520px;margin:0 auto;background:var(--card);border-radius:18px;padding:16px;box-shadow:0 12px 40px #0003}
+.info h3{margin:0;font-size:21px;line-height:1.15}.info .by{margin:3px 0 0;font-size:15px}
+.info .meta{margin:6px 0 0;color:var(--muted);font-size:13.5px}.info .note{margin:8px 0 0;color:var(--muted);font-size:14px;line-height:1.45}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+<canvas id="c" aria-label="A 3D view of a white cube shelf with a turntable, a lava lamp, a plant and a record collection"></canvas>
+<div id="vig"></div><div class="tip" id="tip" hidden></div>
+<div class="name" id="name"><h1>Xavier Ruiz</h1><p>Product Marketing Specialist</p></div>
+<div class="hint" id="hint">Drag to look around · tap things</div>
+<div id="sheet" role="region" aria-live="polite"></div><button class="btn back" id="back" hidden>Step back</button><aside id="about" class="about" aria-label="About Xavier"></aside>
+<div id="inspect" role="dialog" aria-modal="true" aria-label="Record">
+  <canvas id="ic" aria-label="The record you picked up. Drag to turn it."></canvas>
+  <div class="info"><h3 id="it"></h3><p class="by" id="ia"></p><p class="meta" id="im"></p><p class="note" id="iw"></p>
+    <div class="row"><button class="btn" id="flip">Flip it</button><button class="btn" id="play" hidden>Put it on</button><button class="btn ghost" id="slide">Slide out the vinyl</button><button class="btn ghost" id="close">Put it back</button><a class="btn spot" id="spot" target="_blank" rel="noopener" aria-label="Listen on Spotify" title="Listen on Spotify"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#1ed760"/><path d="M6.4 9.3c3.7-1.1 8.2-.8 11.4 1.1M7 12.4c3-.9 6.8-.6 9.5 1M7.6 15.3c2.4-.7 5.2-.5 7.4.8" fill="none" stroke="#000" stroke-width="1.7" stroke-linecap="round"/></svg></a></div></div>
+</div>
