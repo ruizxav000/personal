@@ -23,7 +23,7 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;paddin
 #c.hov{cursor:pointer}
 .strip button{position:relative}.strip button b{position:absolute;left:4px;top:3px;font-size:12px;color:#fff;text-shadow:0 1px 3px #000}.strip button.cur{outline:3px solid var(--ink);outline-offset:2px}
 #sheet{position:fixed;left:12px;right:12px;bottom:calc(env(safe-area-inset-bottom,0px) + 12px);max-width:520px;margin:0 auto;z-index:5;background:var(--card);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-radius:18px;padding:16px;box-shadow:0 12px 40px #0004;transform:translateY(150%);transition:transform .5s cubic-bezier(.22,.7,.2,1)}
-#sheet:not(.on){visibility:hidden;transition:transform .5s cubic-bezier(.22,.7,.2,1),visibility 0s .5s}#sheet.on{transform:none}#sheet .spem{display:block;width:100%;height:80px;border:0;border-radius:12px;margin-top:12px;background:#282828}
+#sheet:not(.on){visibility:hidden;transition:transform .5s cubic-bezier(.22,.7,.2,1),visibility 0s .5s}#sheet.on{transform:none}
 .about{position:fixed;z-index:5;right:clamp(16px,4vw,56px);top:50%;width:min(410px,calc(100vw - 32px));max-height:calc(100% - 140px);overflow:auto;background:var(--card);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-radius:20px;padding:22px 22px 18px;box-shadow:0 16px 48px #0005;opacity:0;pointer-events:none;transform:translate(28px,-50%);transition:opacity .45s ease,transform .55s cubic-bezier(.22,.7,.2,1)}
 .about.on{opacity:1;pointer-events:auto;transform:translate(0,-50%)}
 .about .eyebrow{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--muted)}
