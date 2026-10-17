@@ -269,5 +269,26 @@ s=s.replace(a,'\ntune(Math.max(0,TV_CHANNELS.map(function(c){return c.src}).inde
 a='var FLX=-1.0,FLZ=1.86,'
 assert s.count(a)==1
 s=s.replace(a,'var FLX=-.85,FLZ=1.86,')
+# turntable: a Spotify player for the album on the platter (only when we have its album link) and a vinyl crackle,
+# synthesised in the browser, that fades in while the "Now spinning" card is open; a needle drop on "Put it on"
+a='$("bk").onclick=step;if($("cpy"))'
+assert s.count(a)==1
+s=s.replace(a,'$("bk").onclick=step;ttExtras(tag);if($("cpy"))')
+a='function open_(tag){'
+assert s.count(a)==1
+s=s.replace(a,a+'if(tag!=="tt")crackle(false);')
+a='function step(){'
+assert s.count(a)==1
+s=s.replace(a,'function spId(r){var u=SPOTIFY[r.id],m=u&&u.match(/album\/([A-Za-z0-9]+)/);return m?m[1]:null}'
+'function ttExtras(tag){crackle(tag==="tt");if(tag!=="tt")return;var id=spId(NOW);if(!id)return;var f=document.createElement("iframe");f.className="spem";f.src="https://open.spotify.com/embed/album/"+id+"?utm_source=generator&theme=0";f.allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture";f.loading="lazy";f.title="Listen to "+NOW.t+" on Spotify";sheet.insertBefore(f,sheet.querySelector(".row"))}'
+'var AC=null,CK=null;function acx(){if(!AC){var C=window.AudioContext||window.webkitAudioContext;if(!C)return null;AC=new C()}if(AC.state==="suspended")AC.resume();return AC}'
+'function crackBuf(a){var sr=a.sampleRate,n=sr*6,b=a.createBuffer(2,n,sr);for(var ch=0;ch<2;ch++){var d=b.getChannelData(ch),lp=0;for(var i=0;i<n;i++){var w=Math.random()*2-1;lp+=(w-lp)*.02;d[i]=w*.01+lp*.05}var pops=Math.round(6*(26+Math.random()*10));for(var k=0;k<pops;k++){var q=Math.random()*n|0,amp=(Math.random()<.12?.45:.13)*(.2+Math.random()*.8),len=20+Math.random()*120|0,sg=Math.random()<.5?-1:1;for(var j=0;j<len&&q+j<n;j++)d[q+j]+=sg*amp*Math.exp(-j/(len*.25))*(j%2?1:-.6)}}return b}'
+'function crackle(on){if(on){var a=acx();if(!a)return;if(!CK){var src=a.createBufferSource();src.buffer=crackBuf(a);src.loop=true;var hp=a.createBiquadFilter();hp.type="highpass";hp.frequency.value=180;var g=a.createGain();g.gain.value=0;src.connect(hp);hp.connect(g);g.connect(a.destination);src.start();CK={g:g}}CK.g.gain.cancelScheduledValues(a.currentTime);CK.g.gain.setTargetAtTime(.35,a.currentTime,.4)}else if(CK&&AC){CK.g.gain.cancelScheduledValues(AC.currentTime);CK.g.gain.setTargetAtTime(0,AC.currentTime,.25)}}'
+'document.addEventListener("visibilitychange",function(){if(document.hidden)crackle(false)});'
+'function needle(){var a=acx();if(!a)return;var n=a.sampleRate*.5|0,b=a.createBuffer(1,n,a.sampleRate),d=b.getChannelData(0);for(var i=0;i<n;i++){var t=i/a.sampleRate;d[i]=(Math.random()*2-1)*Math.exp(-t*30)*.5+Math.sin(2*PI*55*t)*Math.exp(-t*12)*.4}var sn=a.createBufferSource(),g=a.createGain();g.gain.value=.5;sn.buffer=b;sn.connect(g);g.connect(a.destination);sn.start()}'
+'function step(){crackle(false);')
+a='setNow(r);open_("tt")'
+assert s.count(a)==1
+s=s.replace(a,'setNow(r);needle();open_("tt")')
 open('main.js','w').write(s)
 print('ok',len(s))
