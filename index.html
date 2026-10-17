@@ -66,7 +66,7 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;paddin
 .strip button{flex:none;width:68px;height:68px;border-radius:2px;background-size:cover;background-position:center;box-shadow:0 4px 8px #0003}
 #inspect{position:fixed;inset:0;z-index:10;display:none;background:rgba(10,10,12,.12);backdrop-filter:blur(12px) saturate(1.1);-webkit-backdrop-filter:blur(12px) saturate(1.1)}
 #inspect.on{display:block;animation:fade .35s}
-#inspect.closing{animation:fadeout .42s cubic-bezier(.4,0,.2,1) forwards;pointer-events:none}@keyframes fadeout{from{opacity:1}to{opacity:0}}
+#inspect.closing{animation:fadeout .42s cubic-bezier(.4,0,.2,1) forwards;pointer-events:none}#inspect{background:none;-webkit-backdrop-filter:none;backdrop-filter:none}body::after{content:"";position:absolute;inset:0;z-index:9;pointer-events:none;visibility:hidden;background:rgba(10,10,12,.12);-webkit-backdrop-filter:blur(12px) saturate(1.1);backdrop-filter:blur(12px) saturate(1.1)}body:has(#inspect.on)::after{visibility:visible;animation:fade .35s}body:has(#inspect.closing)::after{animation:fadeout .42s cubic-bezier(.4,0,.2,1) forwards}@keyframes fadeout{from{opacity:1}to{opacity:0}}
 @keyframes fade{from{opacity:0}}
 #ic{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab}
 .info{position:absolute;left:12px;right:12px;bottom:calc(env(safe-area-inset-bottom,0px) + 12px);max-width:520px;margin:0 auto;background:var(--card);border-radius:18px;padding:16px;box-shadow:0 12px 40px #0003}
