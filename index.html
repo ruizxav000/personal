@@ -1057,7 +1057,7 @@ var PLB=M(0xfff1d8,.4,0,{emissive:new T.Color(0xffd9a0),emissiveIntensity:.2});v
 var picL=new T.SpotLight(0xffd6a0,0,1.1,.9,.8,2);picL.color.convertSRGBToLinear();picL.position.set(.05,1.44+OH_/2+.05,BZ+.11);picL.target.position.set(.05,1.44-.05,BZ);scene.add(picL);scene.add(picL.target);
 
 seed=1227179742;// ---------- tripod floor lamp: click to switch it on and off ----------
-var FLX=-1.0,FLZ=1.86,fl=grp("floorlamp",FLX,0,FLZ),OAK=M(0x8a5a32,.5,0,{clearcoat:.3,clearcoatRoughness:.4},1),BRASS=M(0xb8904a,.3,1);
+var FLX=-.85,FLZ=1.86,fl=grp("floorlamp",FLX,0,FLZ),OAK=M(0x8a5a32,.5,0,{clearcoat:.3,clearcoatRoughness:.4},1),BRASS=M(0xb8904a,.3,1);
 [1.047,3.14159,5.236].forEach(function(a){stem([Math.cos(a)*.22,0,Math.sin(a)*.22],[0,1.02,0],.011,OAK,fl)});
 cyl(.018,.018,.05,BRASS,0,1.03,0,fl,16);cyl(.006,.006,.28,BRASS,0,1.19,0,fl,10);
 var LBULB=M(0xfff4e0,.3,0,{emissive:new T.Color(0xffc27a),emissiveIntensity:0});mesh(new T.SphereGeometry(.03,20,14),LBULB,0,1.29,0,fl).castShadow=false;

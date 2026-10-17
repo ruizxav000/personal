@@ -265,5 +265,9 @@ s=s.replace(a,'if(tag==="lamp"){night=!night;$("go").textContent=night?"Turn the
 a='\ntune(0);\n'
 assert s.count(a)==1
 s=s.replace(a,'\ntune(Math.max(0,TV_CHANNELS.map(function(c){return c.src}).indexOf(TV_START)));\n')
+# floor lamp: 15cm further off the side wall (its light and shadow follow FLX)
+a='var FLX=-1.0,FLZ=1.86,'
+assert s.count(a)==1
+s=s.replace(a,'var FLX=-.85,FLZ=1.86,')
 open('main.js','w').write(s)
 print('ok',len(s))
