@@ -820,15 +820,14 @@ G.setIndex(gT.concat(gS));G.addGroup(0,gT.length,0);G.addGroup(gT.length,gS.leng
 mesh(G,[M(0xffffff,.4,0,{map:DTX}),WH],0,0,0,RKB);
 
 // ================= black shield frame under the deck =================
-var FO=[[-.04,.92],[.08,1.22],[.54,1.15],[.86,.72],[.97,.4]],fs=new T.Shape();
+var FO=[[-.04,.76],[.08,1.0],[.54,.94],[.86,.52],[.97,.22]],fs=new T.Shape();
 FO.forEach(function(p,i){var px=p[0]*L-L/2,py=p[1]*HW;i?fs.lineTo(px,py):fs.moveTo(px,py)});for(var f=FO.length-1;f>=0;f--)fs.lineTo(FO[f][0]*L-L/2,-FO[f][1]*HW);
-var fg=new T.ExtrudeGeometry(fs,{depth:.0045,bevelEnabled:true,bevelThickness:.0008,bevelSize:.0008,bevelSegments:2});fg.rotateX(-PI/2);mesh(fg,BL2,0,-.003,0,RKB);
+var fg=new T.ExtrudeGeometry(fs,{depth:.0045,bevelEnabled:true,bevelThickness:.0008,bevelSize:.0008,bevelSegments:2});fg.rotateX(-PI/2);mesh(fg,BL2,0,.0005,0,RKB).scale.set(1,1,.92);// tucked under the deck edge: only the louvered band and wings read as the black frame
 // louvered band across the back, raised and overhanging the rear housing
 var lc=cvs(128,512),lx=lc.getContext("2d");lx.fillStyle="#1b1c1e";lx.fillRect(0,0,128,512);
 for(var s2=3;s2<128;s2+=9){lx.fillStyle="#38393d";lx.fillRect(s2,8,4,496);lx.fillStyle="#0c0c0d";lx.fillRect(s2+4,8,2,496)}
 var LM=M(0xffffff,.45,0,{map:ctex(lc)});
-var lv=box(.032,.0065,2*HW*1.16,[BL,BL,LM,BL,BL,BL],-.087,.0335,0,RKB);lv.rotation.z=-.07;
-[-1,1].forEach(function(s){var ch=box(.022,.0055,.012,BL,-.064,.031,s*HW*1.06,RKB);ch.rotation.y=s*.5});// chevron corners of the band
+var lv=box(.036,.0042,.09,[BL,BL,LM,BL,BL,BL],-.087,.0298,0,RKB);lv.rotation.z=-.05;// lies on top of the hull, rising slightly toward the back
 
 // ================= chevron wings =================
 [-1,1].forEach(function(s){
@@ -847,62 +846,70 @@ var tip=box(.008,.006,.0155,BL,.1345,.006,0,RKB);
 [-.004,0,.004].forEach(function(z,i){var h=mesh(new T.CircleGeometry(i===1?.0016:.0012,14),HO,.1386,.006,z,RKB);h.rotation.y=PI/2;
 var t2=mesh(new T.CircleGeometry(.0011,12),HO,.1345,.0091,z,RKB);t2.rotation.x=-PI/2});
 
-// ================= rear housing =================
-var RX=-.113;// rear face
-rearX(rshape(.08,.046,.014,.004,0,.008),.03,WH,-.083,0);
-// sides: panel lines and the black stepped pattern
-var sc=cvs(256,256),sx=sc.getContext("2d");sx.fillStyle="#ecebe7";sx.fillRect(0,0,256,256);
-sx.fillStyle="#1a1b1d";sx.beginPath();sx.moveTo(0,256);sx.lineTo(0,150);sx.lineTo(40,150);sx.lineTo(40,172);sx.lineTo(84,172);sx.lineTo(84,196);sx.lineTo(132,196);sx.lineTo(132,214);sx.lineTo(186,214);sx.lineTo(186,232);sx.lineTo(256,232);sx.lineTo(256,256);sx.closePath();sx.fill();
-sx.strokeStyle="#6f6f6c";sx.lineWidth=3;sx.strokeRect(150,40,62,62);[[0,118,256,118],[110,0,110,150],[210,118,210,214],[40,20,40,150]].forEach(function(l){sx.beginPath();sx.moveTo(l[0],l[1]);sx.lineTo(l[2],l[3]);sx.stroke()});
+// ================= rear section (matched to the close-up of the back) =================
+var RX=-.106;// rear face of the hull
+// hull rear: wide, rounded shoulders, two-tone sides; the last few mm form a shell with the two thruster bays cut in
+var BAY=[-1,1].map(function(s){return {z:s*.026,y:.003}});
+function bayShape(b,grow){var g=grow||0;return rshape(.025+g,.019+g,.005+g/2,.005+g/2,b.z,b.y)}
+rearX(rshape(.084,.044,.012,.003,0,.006),.043,WH,-.056,0);
+var shell=rshape(.084,.044,.012,.003,0,.006);BAY.forEach(function(b){var h=new T.Path();bayShape(b).getPoints(6).forEach(function(p,i){i?h.lineTo(p.x,p.y):h.moveTo(p.x,p.y)});shell.holes.push(h)});
+rearX(shell,.007,WH,RX+.007,0);
+BAY.forEach(function(b){rearX(bayShape(b),.001,M(0x101012,.7),RX+.0068,0)});// bay floors
+// sides: white over dark grey, black panel lines, the square outline, two big and two small holes
+var sc=cvs(512,288),sx=sc.getContext("2d");sx.fillStyle="#ecebe7";sx.fillRect(0,0,512,288);
+sx.fillStyle="#3a3b3f";sx.beginPath();sx.moveTo(0,288);sx.lineTo(0,150);sx.lineTo(250,150);sx.lineTo(250,170);sx.lineTo(512,170);sx.lineTo(512,288);sx.closePath();sx.fill();
+sx.fillStyle="#1c1d1f";sx.fillRect(14,162,214,96);
+sx.fillStyle="#050505";[[60,206,23],[112,206,23]].forEach(function(h){sx.beginPath();sx.arc(h[0],h[1],h[2],0,PI*2);sx.fill()});
+[[158,214,10],[184,214,10]].forEach(function(h){sx.beginPath();sx.arc(h[0],h[1],h[2],0,PI*2);sx.fill()});
+sx.strokeStyle="#141414";sx.lineWidth=4;sx.strokeRect(78,44,70,62);
+[[[200,0],[200,58],[226,58],[226,150]],[[300,0],[300,76],[270,76],[270,150]],[[360,0],[360,170]],[[0,124],[60,124]],[[420,40],[512,28]],[[440,170],[440,110],[512,110]]].forEach(function(l){sx.beginPath();l.forEach(function(p,i){i?sx.lineTo(p[0],p[1]):sx.moveTo(p[0],p[1])});sx.stroke()});
+sx.strokeStyle="rgba(0,0,0,.12)";sx.lineWidth=1;for(var w2=0;w2<30;w2++){var wx=R()*512,wy=R()*150;sx.beginPath();sx.moveTo(wx,wy);sx.lineTo(wx+R()*24-12,wy+R()*6);sx.stroke()}// light wear
 var SM=M(0xffffff,.42,0,{map:ctex(sc)});
-[-1,1].forEach(function(s){var pl=mesh(new T.PlaneGeometry(.03,.028),SM,-.098,.004,s*.0403,RKB);pl.rotation.y=s>0?0:PI});
-
-// ================= rear face =================
-var Y0=.0125;
-box(.0035,.035,.032,WH,RX-.0006,Y0-.002,0,RKB);// hatch plate
-[-1,1].forEach(function(s){box(.0012,.035,.0008,M(0x8d8d8a,.5),RX-.0024,Y0-.002,s*.016,RKB)});// plate seams
-// spoked door
-var dc=cvs(256),dx=dc.getContext("2d");dx.fillStyle="#c9c9c6";dx.fillRect(0,0,256,256);
-var dg=dx.createRadialGradient(128,128,10,128,128,128);dg.addColorStop(0,"#d8d8d5");dg.addColorStop(1,"#9c9c99");dx.fillStyle=dg;dx.beginPath();dx.arc(128,128,126,0,PI*2);dx.fill();
-dx.strokeStyle="#5f5f62";dx.lineWidth=7;for(var k=0;k<12;k++){var an=k/12*PI*2;dx.beginPath();dx.moveTo(128+Math.cos(an)*26,128+Math.sin(an)*26);dx.lineTo(128+Math.cos(an)*118,128+Math.sin(an)*118);dx.stroke()}
-dx.lineWidth=5;[26,60,96].forEach(function(r){dx.beginPath();dx.arc(128,128,r,0,PI*2);dx.stroke()});
-dx.lineWidth=6;[[70,70,186,186],[186,70,70,186],[128,30,128,226]].forEach(function(l){dx.beginPath();dx.moveTo(l[0],l[1]);dx.lineTo(l[2],l[3]);dx.stroke()});
-dx.fillStyle="#7a7a7d";dx.beginPath();dx.arc(128,128,16,0,PI*2);dx.fill();dx.fillStyle="#4a4a4d";dx.fillRect(118,180,20,34);
-var door=mesh(new T.CircleGeometry(.0088,32),M(0xffffff,.45,.2,{map:ctex(dc)}),RX-.0025,Y0,0,RKB);door.rotation.y=-PI/2;
-var lip=mesh(new T.TorusGeometry(.0091,.0007,8,40),M(0xbdbdba,.4,.3),RX-.0026,Y0,0,RKB);lip.rotation.y=PI/2;
-// chain ring: 30 alternating links
-for(k=0;k<30;k++){var an2=k/30*PI*2,cy=Y0+Math.sin(an2)*.0106,cz=Math.cos(an2)*.0106,lk;
-if(k%2){lk=rbox(.0013,.0034,.0017,.0006,.0003,SV,RX-.0034,cy,cz,RKB)}else{lk=rbox(.0024,.0028,.0009,.0004,.0002,SV,RX-.0033,cy,cz,RKB)}lk.rotation.x=-an2;lk.castShadow=false}
-// recessed bolts with gold pins
-[[1,1],[1,-1],[-1,1],[-1,-1]].forEach(function(q){var by=Y0+q[0]*.0118,bz=q[1]*.0118;
-var rr=mesh(new T.TorusGeometry(.0018,.00045,6,20),M(0xd6d6d3,.4),RX-.0025,by,bz,RKB);rr.rotation.y=PI/2;
-var dd=mesh(new T.CircleGeometry(.0016,18),M(0xc4c4c1,.5),RX-.0024,by,bz,RKB);dd.rotation.y=-PI/2;
-box(.0007,.0006,.0024,GD,RX-.0028,by,bz,RKB)});
-// caution decals
-var kc=cvs(512,96),kx=kc.getContext("2d");kx.fillStyle="#ecebe7";kx.fillRect(0,0,512,96);kx.fillStyle="#b22c2c";kx.font="bold 22px Arial";kx.textAlign="center";
-kx.fillText("CAUTION",128,26);kx.fillText("CAUTION",384,26);kx.fillStyle="#555";kx.font="11px Arial";
-["RESCUE HATCH RELEASE","PULL TO OPEN  ·  ROTATE"].forEach(function(t,i){kx.fillText(t,128,44+i*13);kx.fillText(t,384,44+i*13)});
-kx.fillStyle="#24408e";kx.fillRect(96,72,64,14);kx.fillStyle="#fff";kx.font="bold 10px Arial";kx.fillText("NASA",128,83);
-for(var st=0;st<7;st++){kx.fillStyle=st%2?"#fff":"#b22234";kx.fillRect(352,70+st*2.6,64,2.6)}kx.fillStyle="#3c3b6e";kx.fillRect(352,70,26,10);
-var dcl=mesh(new T.PlaneGeometry(.026,.0049),M(0xffffff,.5,0,{map:ctex(kc)}),RX-.0024,Y0-.0153,0,RKB);dcl.rotation.y=-PI/2;
-// thruster housings: rounded hexagonal frames with a deep recess and a horizontal slot
+[-1,1].forEach(function(s){var pl=mesh(new T.PlaneGeometry(.05,.028),SM,RX+.025,-.002,s*.0421,RKB);pl.rotation.y=s>0?0:PI});
+// thick black loops around each bay, heavier along the bottom
+BAY.forEach(function(b){var o=rshape(.033,.031,.008,.009,b.z,b.y-.003),h=new T.Path();bayShape(b).getPoints(6).forEach(function(p,i){i?h.lineTo(p.x,p.y):h.moveTo(p.x,p.y)});o.holes.push(h);
+rearX(o,.006,BL2,RX+.003,.001)});
+// thruster nozzles: black chamfered octagons with a dark throat and a grey slot bar just below centre
 function hex(w,h,c){return [[-w/2+c,-h/2],[w/2-c,-h/2],[w/2,-h/2+c],[w/2,h/2-c],[w/2-c,h/2],[-w/2+c,h/2],[-w/2,h/2-c],[-w/2,-h/2+c]]}
-[-1,1].forEach(function(s){var zc=s*.0265,yc=.0085;
-var outer=poly(hex(.024,.021,.006).map(function(p){return [p[0]+zc,p[1]+yc]})),hole=new T.Path();
-hex(.017,.014,.004).forEach(function(p,i){i?hole.lineTo(p[0]+zc,p[1]+yc):hole.moveTo(p[0]+zc,p[1]+yc)});hole.closePath();outer.holes.push(hole);
-rearX(outer,.012,BL2,RX+.009,.0012);
-var inner=poly(hex(.0172,.0142,.004).map(function(p){return [p[0]+zc,p[1]+yc]}));rearX(inner,.001,ST,RX-.0002,0);// recess floor, just proud of the housing
-var inner2=poly(hex(.012,.009,.003).map(function(p){return [p[0]+zc,p[1]+yc]}));rearX(inner2,.0012,M(0x0b0b0d,.6),RX-.0012,.0004);
-box(.0016,.0024,.0095,GR,RX-.0028,yc,zc,RKB);// the slot bar
-box(.016,.007,.03,BL,RX+.006,-.0085,s*.028,RKB)});// bumper below
-// ribbed grille under the hatch
-box(.008,.0085,.026,GR,RX+.003,-.0105,0,RKB);for(k=0;k<7;k++)box(.0012,.0068,.0018,ST,RX-.0012,-.0105,-.0105+k*.0035,RKB);
-
-// ================= lower pod and belly =================
-var pod=rbox(.056,.016,.064,.009,.0035,DK,-.076,-.016,0,RKB);
-[-1,1].forEach(function(s){box(.026,.009,.001,ST,-.07,-.0155,s*.0321,RKB);
-[[-.079,.0024],[-.071,.0024],[-.0635,.0009],[-.0605,.0009]].forEach(function(h){var c2=mesh(new T.CircleGeometry(h[1],16),HO,h[0],-.0155,s*.0327,RKB);c2.rotation.y=s>0?0:PI})});
-var lb=poly([[-.05,-.001],[.05,-.001],[.0,-.011],[-.05,-.014]]);var lg=new T.ExtrudeGeometry(lb,{depth:HW*1.15,bevelEnabled:true,bevelThickness:.0015,bevelSize:.0015,bevelSegments:2});
+BAY.forEach(function(b){var oc=poly(hex(.019,.016,.0055).map(function(p){return [p[0]+b.z,p[1]+b.y]})),hl=new T.Path();
+hex(.0125,.0095,.0035).forEach(function(p,i){i?hl.lineTo(p[0]+b.z,p[1]+b.y):hl.moveTo(p[0]+b.z,p[1]+b.y)});hl.closePath();oc.holes.push(hl);
+rearX(oc,.009,BL,RX+.007,.0008);
+rearX(poly(hex(.0125,.0095,.0035).map(function(p){return [p[0]+b.z,p[1]+b.y]})),.001,M(0x060607,.8),RX+.0035,0);
+box(.0022,.0021,.0078,M(0xb9b9bd,.3,.8),RX-.0004,b.y-.0012,b.z,RKB)});
+// the hatch: a raised square module with rounded edges between the bays
+var HY=.0045,HF=RX-.0093;
+rearX(rshape(.029,.031,.004,.004,0,HY),.016,WH,RX+.008,.0012);
+var hc=cvs(256,272),hx=hc.getContext("2d");hx.fillStyle="#e9e8e3";hx.fillRect(0,0,256,272);
+for(var sc2=0;sc2<40;sc2++){hx.strokeStyle="rgba(60,60,60,"+(.08+R()*.18)+")";hx.lineWidth=1+R()*1.5;var ax=R()*256,ay=R()*272;hx.beginPath();hx.moveTo(ax,ay);hx.lineTo(ax+R()*30-15,ay+R()*8-4);hx.stroke()}
+var gg=hx.createLinearGradient(0,200,0,272);gg.addColorStop(0,"rgba(80,70,60,0)");gg.addColorStop(1,"rgba(80,70,60,.18)");hx.fillStyle=gg;hx.fillRect(0,200,256,72);// grime low down
+hx.fillStyle="#a83030";hx.font="bold 11px Arial";hx.textAlign="center";hx.fillText("CAUTION",66,246);hx.fillText("CAUTION",190,246);
+hx.fillStyle="#666";hx.font="7px Arial";hx.fillText("HATCH RELEASE",66,256);hx.fillText("HATCH RELEASE",190,256);
+hx.fillStyle="#24408e";hx.fillRect(52,260,28,7);for(var st=0;st<5;st++){hx.fillStyle=st%2?"#fff":"#b22234";hx.fillRect(176,259+st*1.6,28,1.6)}hx.fillStyle="#3c3b6e";hx.fillRect(176,259,11,5);
+var hf=mesh(new T.PlaneGeometry(.0268,.0288),M(0xffffff,.45,0,{map:ctex(hc)}),HF-.0001,HY,0,RKB);hf.rotation.y=-PI/2;
+// recessed spoked door
+var dc=cvs(256),dx=dc.getContext("2d");var dg=dx.createRadialGradient(128,128,4,128,128,128);dg.addColorStop(0,"#e6e6e3");dg.addColorStop(.85,"#c8c8c5");dg.addColorStop(1,"#8d8d8a");
+dx.fillStyle=dg;dx.fillRect(0,0,256,256);dx.strokeStyle="#9a9a98";dx.lineWidth=6;
+for(var k=0;k<8;k++){var an=k/8*PI*2+PI/8;dx.beginPath();dx.moveTo(128+Math.cos(an)*30,128+Math.sin(an)*30);dx.lineTo(128+Math.cos(an)*112,128+Math.sin(an)*112);dx.stroke()}
+dx.lineWidth=4;[30,70,112].forEach(function(r){dx.beginPath();dx.arc(128,128,r,0,PI*2);dx.stroke()});
+dx.strokeStyle="#7d7d7b";dx.lineWidth=5;[[80,60,128,128],[176,60,128,128],[60,170,128,128],[196,170,128,128]].forEach(function(l){dx.beginPath();dx.moveTo(l[0],l[1]);dx.lineTo(l[2],l[3]);dx.stroke()});
+dx.fillStyle="#b4b4b1";dx.beginPath();dx.arc(128,128,22,0,PI*2);dx.fill();dx.fillStyle="#8a8a87";dx.fillRect(120,150,16,46);
+var dsh=mesh(new T.RingGeometry(.0066,.0076,40),M(0x2a2a2c,.7),HF-.0002,HY,0,RKB);dsh.rotation.y=-PI/2;// shadow line where the door sits in
+var door=mesh(new T.CircleGeometry(.0068,36),M(0xffffff,.5,.1,{map:ctex(dc)}),HF-.0003,HY,0,RKB);door.rotation.y=-PI/2;
+// chunky gunmetal chain ring around the door
+var GM=M(0x9a9aa0,.32,.9);
+var cr=mesh(new T.TorusGeometry(.0089,.0007,8,48),M(0x55555a,.4,.9),HF-.0006,HY,0,RKB);cr.rotation.y=PI/2;
+for(k=0;k<32;k++){var an2=k/32*PI*2,cy=HY+Math.sin(an2)*.0089,cz=Math.cos(an2)*.0089,lk;
+if(k%2)lk=rbox(.0014,.0023,.0012,.0005,.0003,GM,HF-.0012,cy,cz,RKB);else lk=rbox(.0018,.002,.0007,.0003,.0002,GM,HF-.001,cy,cz,RKB);
+lk.rotation.x=-an2;lk.castShadow=false}
+// four raised round bolt buttons with slots
+[[1,1],[1,-1],[-1,1],[-1,-1]].forEach(function(q){var by=HY+q[0]*.0116,bz=q[1]*.0106;
+var bt=cyl(.0021,.0022,.0014,M(0xeceae6,.4),HF-.0007,by,bz,RKB,20);bt.rotation.z=PI/2;
+box(.0005,.0006,.0028,M(0x9c9c99,.5),HF-.0015,by,bz,RKB)});
+// slotted grille block under the hatch, set under the hull
+box(.026,.0095,.032,DK,RX+.009,-.0165,0,RKB);
+for(k=0;k<9;k++)box(.0012,.0066,.0015,M(0x070708,.8),RX-.0042,-.0165,-.0128+k*.0032,RKB);
+// dark belly under the deck
+var lb=poly([[-.06,-.001],[.05,-.001],[.0,-.011],[-.06,-.014]]);var lg=new T.ExtrudeGeometry(lb,{depth:HW*1.15,bevelEnabled:true,bevelThickness:.0015,bevelSize:.0015,bevelSegments:2});
 lg.translate(0,0,-HW*.575);mesh(lg,DK,0,0,0,RKB);
 
 // ================= maglev base =================
@@ -914,8 +921,8 @@ box(.03,.007,.0015,GD,0,.008,.0575,RKSG);
 
 // ================= thruster glow (launch only) =================
 var FL=new T.MeshBasicMaterial({color:0x8fb8ff,transparent:true,opacity:0,blending:T.AdditiveBlending,depthWrite:false}),FC=new T.MeshBasicMaterial({color:0xf2f6ff,transparent:true,opacity:0,blending:T.AdditiveBlending,depthWrite:false});
-RKF=grp(0,RX-.004,.0085,0,RKB);
-[-1,1].forEach(function(s){var zc=s*.0265,fo=mesh(new T.ConeGeometry(.0065,.05,16,1,true),FL,-.025,0,zc,RKF),fi=mesh(new T.ConeGeometry(.0032,.028,12,1,true),FC,-.014,0,zc,RKF);
+RKF=grp(0,RX-.004,.002,0,RKB);
+[-1,1].forEach(function(s){var zc=s*.026,fo=mesh(new T.ConeGeometry(.0065,.05,16,1,true),FL,-.025,0,zc,RKF),fi=mesh(new T.ConeGeometry(.0032,.028,12,1,true),FC,-.014,0,zc,RKF);
 fo.rotation.z=fi.rotation.z=PI/2;fo.castShadow=fi.castShadow=false});
 RKF.material={set opacity(v){FL.opacity=v;FC.opacity=Math.min(1,v*1.2)}};
 })();
