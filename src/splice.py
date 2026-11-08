@@ -269,5 +269,18 @@ s=s.replace(a,'\ntune(Math.max(0,TV_CHANNELS.map(function(c){return c.src}).inde
 a='var FLX=-1.0,FLZ=1.86,'
 assert s.count(a)==1
 s=s.replace(a,'var FLX=-.85,FLZ=1.86,')
+# the hourglass becomes a desk model of the Apollo 11 Saturn V that launches Twin Paradox
+h='// ---------- hourglass ----------\n'
+i0=s.index(h)+len(h);j0=s.index('sd.scale.set(.8,.42,.8);',i0)+len('sd.scale.set(.8,.42,.8);')
+s=s[:i0]+open('parts/saturn.js').read()+s[j0:]
+a='var V={'
+assert s.count(a)==1
+s=s.replace(a,a+'rocket:{p:[.47,.6,.62],t:[.36,.5,.02]},')
+a='lamp:{t:"Mood"'
+assert s.count(a)==1
+s=s.replace(a,'rocket:{t:"Twin Paradox",x:"A first-person trip to a black hole that I built, ray traced live in your browser. Best on a computer, with sound on.",b:"Launch \u2197"},'+a)
+a='$("go").onclick=function(){'
+assert s.count(a)==1
+s=s.replace(a,a+'if(tag==="rocket"){window.open(TWIN_URL,"_blank","noopener");return}')
 open('main.js','w').write(s)
 print('ok',len(s))
