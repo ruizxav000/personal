@@ -278,7 +278,7 @@ assert s.count(a)==1
 s=s.replace(a,a+'rocketUpdate(t);')
 a='var V={'
 assert s.count(a)==1
-s=s.replace(a,a+'rocket:{p:[.8,1.28,1.02],t:[.46,1.12,-.1]},')
+s=s.replace(a,a+'rocket:{p:[.83,1.28,1.03],t:[.49,1.12,-.09]},')
 a='lamp:{t:"Mood"'
 assert s.count(a)==1
 s=s.replace(a,'rocket:{t:"Twin Paradox",x:"A first-person trip to a black hole that I built, ray traced live in your browser. Best on a computer, with sound on.",b:"Launch \u2197"},'+a)

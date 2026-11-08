@@ -747,7 +747,8 @@ seed=-780401805;// a floating model of the Apollo 11 Saturn V, built from the 3D
 // F-1s, fairings and fins; the S-IC/S-II interstage with its ullage motors; the S-II with its J-2s and the conical
 // interstage; the S-IVB; the lunar module adapter; the service module; the command module under its boost cover; and the
 // escape tower). The parts are assembled, culled where sealed inside one another, and packed in media/saturnv.txt
-// (gzipped binary, base64 so every host serves it). It stands on the shelf behind the little house.
+// (gzipped binary, base64 so every host serves it). It stands in the back right corner of the shelf top, behind
+// the little house, set in evenly from the right and back edges.
 // Paint, Apollo 11 (AS-506): white overall; S-IC roll pattern of four black stripes from the base to the intertank;
 // a flag over a red "USA" on the LOX tank on four sides; "UNITED STATES" down the S-II on four sides; the two-bit roll
 // code on the S-II/S-IVB interstage; a black stripe over the S-IVB forward skirt and instrument unit; silver service
@@ -755,7 +756,7 @@ seed=-780401805;// a floating model of the Apollo 11 Saturn V, built from the 3D
 // Click it and the five F-1s light and it lifts off the shelf and hovers above the house, drifting (Twin Paradox card);
 // step back and it settles back down as they wind down. Launch opens Twin Paradox. Each flame is cut short above the
 // shelf top so it never burns through it, and grows as the rocket climbs.
-var RKHT=.5,RKP=[{at:[.43,.751,-.14],v:{p:[.8,1.28,1.02],t:[.46,1.12,-.1]}}],RKUP=.22,RKFLOOR=.757,RKX=RKP[0].at[0],RKY=RKP[0].at[1],RKZ=RKP[0].at[2];
+var RKHT=.5,RKP=[{at:[.485,.751,-.125],v:{p:[.83,1.28,1.03],t:[.49,1.12,-.09]}}],RKUP=.22,RKFLOOR=.757,RKX=RKP[0].at[0],RKY=RKP[0].at[1],RKZ=RKP[0].at[2];
 var SVH=1008.13,SVS=RKHT/SVH,rk=grp("rocket",RKX,RKY,RKZ),RKB=grp(0,0,0,0,rk),RKFX=grp(0,RKX,RKY,RKZ),RK={b:0,s:0,t:0};
 // clickable proxy: the real mesh is too heavy to raycast on every pointer move
 var rkHit=cyl(.06,.06,RKHT+.04,new T.MeshBasicMaterial({colorWrite:false,depthWrite:false}),0,RKHT/2,0,rk,12);rkHit.castShadow=rkHit.receiveShadow=false;
@@ -1289,7 +1290,7 @@ if(aa){FQ.material=fxaa;ren.setRenderTarget(null);FQ.render(ren)}},atm:atm,comp:
 if(!FX&&POST){POST=false}
 
 // ================= camera + interaction =================
-var V={rocket:{p:[.8,1.28,1.02],t:[.46,1.12,-.1]},home:{p:[0,0,0],t:[0,0,0]},tt:{p:[.1,1.13,.6],t:[-.12,.8,-.02]},lamp:{p:[-.12,1.03,.45],t:[-.37,.9,-.1]},house:{p:[.64,.91,.33],t:[.49,.8,.04]},hg:{p:[.5,.62,.7],t:[.36,.46,.02]},sleeve:{p:[.42,1.0,.52],t:[.27,.9,-.15]},
+var V={rocket:{p:[.83,1.28,1.03],t:[.49,1.12,-.09]},home:{p:[0,0,0],t:[0,0,0]},tt:{p:[.1,1.13,.6],t:[-.12,.8,-.02]},lamp:{p:[-.12,1.03,.45],t:[-.37,.9,-.1]},house:{p:[.64,.91,.33],t:[.49,.8,.04]},hg:{p:[.5,.62,.7],t:[.36,.46,.02]},sleeve:{p:[.42,1.0,.52],t:[.27,.9,-.15]},
 fig:{p:[-.2,1.2,1.35],t:[-.95,.95,.1]},diploma:{p:[.08,1.5,.78],t:[.05,1.5,BZ]}};
 PK.forEach(function(P){var y=P.y0+.17;V["pk:"+P.p.k]={p:[P.cx+.2,y+.05,.88],t:[P.cx,y-.06,.02]}});
 var BFOV=38,FOVX=0,cp=new T.Vector3(),ct=new T.Vector3(),gp=new T.Vector3(),gt=new T.Vector3(),yaw=0,pit=0,ay=0,ap=0,focus=null,night=true,nt=1,inspecting=false;
