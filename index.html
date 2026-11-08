@@ -753,10 +753,12 @@ seed=-780401805;// a floating model of the Apollo 11 Saturn V, built from the 3D
 // code on the S-II/S-IVB interstage; a black stripe over the S-IVB forward skirt and instrument unit; silver service
 // module with its flag and "UNITED STATES"; black F-1s; light-grey escape tower truss with a dark nose.
 // Click it and the five F-1s light (Twin Paradox card); step back and they wind down. Launch opens Twin Paradox.
-var RKX=-.84,RKY=1.02,RKZ=.8,RKHT=.36;
+// where it hangs: in front of the window on landscape screens; on portrait (phone) screens, whose view and drag range
+// never reach the window, high in the corner above the monstera so it is in the opening view. Each with its close-up.
+var RKHT=.5,RKP=[{at:[-.84,.84,1.4],v:{p:[.08,1.1,2.09],t:[-.84,.95,1.4]}},{at:[-.3,1.45,.5],v:{p:[.25,1.55,1.7],t:[-.3,1.38,.5]}}],RKX=RKP[0].at[0],RKY=RKP[0].at[1],RKZ=RKP[0].at[2];
 var SVH=1008.13,SVS=RKHT/SVH,rk=grp("rocket",RKX,RKY,RKZ),RKB=grp(0,0,0,0,rk),RKFX=grp(0,RKX,RKY,RKZ),RK={b:0,s:0,t:0};
 // clickable proxy: the real mesh is too heavy to raycast on every pointer move
-var rkHit=cyl(.045,.045,RKHT+.04,new T.MeshBasicMaterial({colorWrite:false,depthWrite:false}),0,RKHT/2,0,rk,12);rkHit.castShadow=rkHit.receiveShadow=false;
+var rkHit=cyl(.06,.06,RKHT+.04,new T.MeshBasicMaterial({colorWrite:false,depthWrite:false}),0,RKHT/2,0,rk,12);rkHit.castShadow=rkHit.receiveShadow=false;
 function saturnLivery(W,H){var c=cvs(W,H),x=c.getContext("2d");
 function X(deg){return(.5-deg/360)*W}function Y(mm){return(1-mm/SVH)*H}function pw(mm,R){return mm*W/(2*PI*R)}var ph=H/SVH;
 function band(d0,d1,y0,y1,col){x.fillStyle=col;for(var o=-360;o<=360;o+=360){var a=X(d0+o),b=X(d1+o);x.fillRect(Math.min(a,b),Y(y1),Math.abs(a-b),Y(y0)-Y(y1))}}
@@ -789,22 +791,22 @@ var SV=grp(0,0,0,0,RKB);SV.scale.setScalar(SVS);SV.rotation.y=-PI/2;
 // one plume, plus a warm light that throws the glow on the rocket, the window and the floor. Kept outside the clickable
 // group so the hover outline skips it.
 var FLV="varying vec3 vP;varying vec3 vN;varying vec3 vV;varying float vH;uniform float uL;void main(){vec3 p=position;vH=uv.y;vP=p;vec4 w=modelViewMatrix*vec4(p,1.);vN=normalize(normalMatrix*normal);vV=normalize(-w.xyz);gl_Position=projectionMatrix*w;}",
-FLF="varying vec3 vP;varying vec3 vN;varying vec3 vV;varying float vH;uniform float uT,uA,uK;uniform vec3 c0,c1,c2;"+
+FLF="varying vec3 vP;varying vec3 vN;varying vec3 vV;varying float vH;uniform float uT,uA,uK,uG;uniform vec3 c0,c1,c2;"+
 "float h3(vec3 p){return fract(sin(dot(p,vec3(127.1,311.7,74.7)))*43758.5453);}"+
 "float n3(vec3 p){vec3 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(mix(h3(i),h3(i+vec3(1,0,0)),f.x),mix(h3(i+vec3(0,1,0)),h3(i+vec3(1,1,0)),f.x),f.y),mix(mix(h3(i+vec3(0,0,1)),h3(i+vec3(1,0,1)),f.x),mix(h3(i+vec3(0,1,1)),h3(i+vec3(1,1,1)),f.x),f.y),f.z);}"+
 "void main(){float d=1.-vH,face=abs(dot(normalize(vN),normalize(vV)));"+
 "float n=n3(vec3(vP.x*uK,vP.y*uK+uT*7.,vP.z*uK))*.65+n3(vec3(vP.x*uK*2.3,vP.y*uK*2.3+uT*13.,vP.z*uK*2.3))*.35;"+
-"float a=pow(face,1.6)*smoothstep(0.,.08,d)*pow(1.-d,1.25)*(.55+.9*n)*uA;"+
-"vec3 c=mix(c2,c1,smoothstep(.15,.75,1.-d+n*.25));c=mix(c,c0,smoothstep(.55,1.,(1.-d)*face+n*.15));gl_FragColor=vec4(c*a,a);}";
-function flameMat(c0,c1,c2,k){return new T.ShaderMaterial({uniforms:{uT:{value:0},uA:{value:0},uK:{value:k},c0:{value:new T.Color(c0)},c1:{value:new T.Color(c1)},c2:{value:new T.Color(c2)}},
+"float a=min(1.,pow(face,1.2)*smoothstep(0.,.05,d)*pow(1.-d,.9)*(.6+.8*n)*uA*1.4);"+
+"vec3 c=mix(c2,c1,smoothstep(.15,.75,1.-d+n*.25));c=mix(c,c0,smoothstep(.55,1.,(1.-d)*face+n*.15));gl_FragColor=vec4(c*a*uG,a);}";
+function flameMat(c0,c1,c2,k,g){return new T.ShaderMaterial({uniforms:{uT:{value:0},uA:{value:0},uK:{value:k},uG:{value:g},c0:{value:new T.Color(c0)},c1:{value:new T.Color(c1)},c2:{value:new T.Color(c2)}},
 vertexShader:FLV,fragmentShader:FLF,transparent:true,depthWrite:false,blending:T.AdditiveBlending,side:T.DoubleSide})}
-var FJ=flameMat(0xfff6dc,0xffc65a,0xff6a1a,90),FP=flameMat(0xffe2a0,0xff9a3a,0xb8381a,38),FMS=[FJ,FP],FPL=new T.Group();RKFX.add(FPL);
+var FC=flameMat(0xfff6d6,0xffd070,0xff9020,160,1.2),FJ=flameMat(0xffd27a,0xff8a1e,0xff3c08,90,1),FP=flameMat(0xff9a30,0xff5a10,0x7a1e06,38,.85),FMS=[FC,FJ,FP],FPL=new T.Group();RKFX.add(FPL);
 function flameGeo(r0,r1,len){var g=new T.CylinderGeometry(r1,r0,len,28,12,true);g.translate(0,-len/2,0);return g}
-var FJG=flameGeo(17*SVS,22*SVS,150*SVS),FPG=flameGeo(58*SVS,40*SVS,330*SVS);
-[[0,0],[40,0],[-40,0],[0,40],[0,-40]].forEach(function(e){var m=new T.Mesh(FJG,FJ);m.position.set(e[0]*SVS,0,e[1]*SVS);m.raycast=function(){};m.renderOrder=3;FPL.add(m)});
-var fpm=new T.Mesh(FPG,FP);fpm.position.y=-60*SVS;fpm.raycast=function(){};fpm.renderOrder=3;FPL.add(fpm);FPL.visible=false;
+var FCG=flameGeo(3*SVS,13*SVS,95*SVS),FJG=flameGeo(15*SVS,20*SVS,250*SVS),FPG=flameGeo(125*SVS,55*SVS,780*SVS);
+[[0,0],[40,0],[-40,0],[0,40],[0,-40]].forEach(function(e){[[FCG,FC,4],[FJG,FJ,3]].forEach(function(q){var m=new T.Mesh(q[0],q[1]);m.position.set(e[0]*SVS,0,e[1]*SVS);m.raycast=function(){};m.renderOrder=q[2];FPL.add(m)})});
+var fpm=new T.Mesh(FPG,FP);fpm.position.y=-45*SVS;fpm.raycast=function(){};fpm.renderOrder=3;FPL.add(fpm);FPL.visible=false;
 var RKL=new T.PointLight(0xff8a3a,0,1.6,2);RKL.position.y=-.08;RKFX.add(RKL);
-function rocketUpdate(t){var dt=Math.min(.05,(t-(RK.t||t))/1000);RK.t=t;var on=focus==="rocket"?1:0;
+function rocketUpdate(t){var dt=Math.min(.05,(t-(RK.t||t))/1000);RK.t=t;var P=RKP[cam.aspect<1?1:0];RKX=P.at[0];RKY=P.at[1];RKZ=P.at[2];rk.position.set(RKX,RKY,RKZ);if(V.rocket!==P.v){V.rocket=P.v;if(focus==="rocket")goal(P.v)}var on=focus==="rocket"?1:0;
 RK.b+=(on-RK.b)*Math.min(1,dt*(on?3.2:1.6));if(RK.b<.002&&!on)RK.b=0;RK.s=Math.max(0,RK.s-dt*.7);
 var b=RK.b,f=b*(1+RK.s*.5),s=t/1000,sh=.0007*b;
 RKB.position.set(Math.sin(s*.53)*.004+(Math.random()-.5)*sh,Math.sin(s*1.1)*.007+.025*b*b*(3-2*b)+(Math.random()-.5)*sh,Math.cos(s*.71)*.003+(Math.random()-.5)*sh);
@@ -1287,7 +1289,7 @@ if(aa){FQ.material=fxaa;ren.setRenderTarget(null);FQ.render(ren)}},atm:atm,comp:
 if(!FX&&POST){POST=false}
 
 // ================= camera + interaction =================
-var V={rocket:{p:[-.1,1.2,1.3],t:[-.84,1.12,.8]},home:{p:[0,0,0],t:[0,0,0]},tt:{p:[.1,1.13,.6],t:[-.12,.8,-.02]},lamp:{p:[-.12,1.03,.45],t:[-.37,.9,-.1]},house:{p:[.64,.91,.33],t:[.49,.8,.04]},hg:{p:[.5,.62,.7],t:[.36,.46,.02]},sleeve:{p:[.42,1.0,.52],t:[.27,.9,-.15]},
+var V={rocket:{p:[.08,1.1,2.09],t:[-.84,.95,1.4]},home:{p:[0,0,0],t:[0,0,0]},tt:{p:[.1,1.13,.6],t:[-.12,.8,-.02]},lamp:{p:[-.12,1.03,.45],t:[-.37,.9,-.1]},house:{p:[.64,.91,.33],t:[.49,.8,.04]},hg:{p:[.5,.62,.7],t:[.36,.46,.02]},sleeve:{p:[.42,1.0,.52],t:[.27,.9,-.15]},
 fig:{p:[-.2,1.2,1.35],t:[-.95,.95,.1]},diploma:{p:[.08,1.5,.78],t:[.05,1.5,BZ]}};
 PK.forEach(function(P){var y=P.y0+.17;V["pk:"+P.p.k]={p:[P.cx+.2,y+.05,.88],t:[P.cx,y-.06,.02]}});
 var BFOV=38,FOVX=0,cp=new T.Vector3(),ct=new T.Vector3(),gp=new T.Vector3(),gt=new T.Vector3(),yaw=0,pit=0,ay=0,ap=0,focus=null,night=true,nt=1,inspecting=false;
