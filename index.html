@@ -88,7 +88,7 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;paddin
 <canvas id="c" aria-label="A 3D room: a shelf of records with a turntable, a lava lamp, a little house, a Saturn V model, posters, a diploma and an old TV"></canvas>
 <div id="vig"></div><div class="tip" id="tip" hidden></div>
 <div class="name" id="name"><h1>Xavier Ruiz</h1><p>Product Marketing</p></div>
-<div class="hint" id="hint">Drag to look around · tap things</div>
+<div class="hint" id="hint">Drag to look around · tap things · start at the house</div>
 <div id="sheet" role="region" aria-live="polite"></div><button class="btn back" id="back" hidden>Step back</button><aside id="about" class="about" aria-label="About Xavier"></aside>
 <div id="inspect" role="dialog" aria-modal="true" aria-label="Record">
   <canvas id="ic" aria-label="The record you picked up. Drag to turn it."></canvas>
@@ -1378,7 +1378,7 @@ function layerTag(tag,on){scene.traverse(function(o){if(o.userData.tag===tag)o.t
 function setHover(tag){if(tag===HOV)return;if(HOV)layerTag(HOV,false);HOV=tag;if(tag)layerTag(tag,true);cv.classList.toggle("hov",!!tag);
 var t=false;if(t&&!inspecting){tip.innerHTML=esc(t[0])+"<span>"+esc(typeof t[1]==="function"?t[1]():t[1])+"</span>";tip.hidden=false}else tip.hidden=true}
 var dr=null,mv=false,cv=$("c"),touchUI=matchMedia("(hover:none)").matches;
-$("hint").textContent=touchUI?"Drag to look around · tap things":"Drag to look around · click things";
+$("hint").textContent=touchUI?"Drag to look around · tap things · start at the house":"Drag to look around · click things · start at the house";
 var CD=null;function rayZ(e){NDC(e);ray.setFromCamera(m2,cam);var o=ray.ray.origin,d=ray.ray.direction;return Math.abs(d.x)<1e-4?null:o.z+d.z*(CX-o.x)/d.x}
 var KD=null;function kAng(e){return Math.atan2(-(e.clientY-KD.cy),e.clientX-KD.cx)}
 cv.addEventListener("pointerdown",function(e){var p=pick(e);if(p&&(p.tag==="tvch"||p.tag==="tvpow")&&!inspecting){var k=KNOB[p.tag],w=new T.Vector3();k.getWorldPosition(w).project(cam);KD={tag:p.tag,k:k,cx:(w.x+1)/2*ren.domElement.clientWidth,cy:(1-w.y)/2*ren.domElement.clientHeight,x:e.clientX,y:e.clientY,r0:k.userData.rz,acc:0,moved:false};KD.a=kAng(e);hint();return}if(p&&p.tag==="curtain"&&!inspecting){var z=rayZ(e);CD={off:z==null?0:curLeadT-z,moved:false,x:e.clientX,y:e.clientY};hint();return}dr={x:e.clientX,y:e.clientY,yw:yaw,pt:pit};mv=false});

@@ -285,5 +285,9 @@ s=s.replace(a,'rocket:{t:"Twin Paradox",x:"A first-person trip to a black hole t
 a='$("go").onclick=function(){'
 assert s.count(a)==1
 s=s.replace(a,a+'if(tag==="rocket"){rocketBoost();window.open(TWIN_URL,"_blank","noopener");return}')
+# the hint points people at the house, where the about panel lives
+a='$("hint").textContent=touchUI?"Drag to look around · tap things":"Drag to look around · click things";'
+assert s.count(a)==1
+s=s.replace(a,'$("hint").textContent=touchUI?"Drag to look around · tap things · start at the house":"Drag to look around · click things · start at the house";')
 open('main.js','w').write(s)
 print('ok',len(s))
