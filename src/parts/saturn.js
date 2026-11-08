@@ -2,15 +2,14 @@
 // F-1s, fairings and fins; the S-IC/S-II interstage with its ullage motors; the S-II with its J-2s and the conical
 // interstage; the S-IVB; the lunar module adapter; the service module; the command module under its boost cover; and the
 // escape tower). The parts are assembled, culled where sealed inside one another, and packed in media/saturnv.txt
-// (gzipped binary, base64 so every host serves it). It hangs in the air in front of the window, drifting gently.
+// (gzipped binary, base64 so every host serves it). It hangs in the air behind the little house, drifting gently.
 // Paint, Apollo 11 (AS-506): white overall; S-IC roll pattern of four black stripes from the base to the intertank;
 // a flag over a red "USA" on the LOX tank on four sides; "UNITED STATES" down the S-II on four sides; the two-bit roll
 // code on the S-II/S-IVB interstage; a black stripe over the S-IVB forward skirt and instrument unit; silver service
 // module with its flag and "UNITED STATES"; black F-1s; light-grey escape tower truss with a dark nose.
-// Click it and the five F-1s light (Twin Paradox card); step back and they wind down. Launch opens Twin Paradox.
-// where it hangs: in front of the window on landscape screens; on portrait (phone) screens, whose view and drag range
-// never reach the window, high in the corner above the monstera so it is in the opening view. Each with its close-up.
-var RKHT=.5,RKP=[{at:[-.84,.84,1.4],v:{p:[.08,1.1,2.09],t:[-.84,.95,1.4]}},{at:[-.3,1.45,.5],v:{p:[.25,1.55,1.7],t:[-.3,1.38,.5]}}],RKX=RKP[0].at[0],RKY=RKP[0].at[1],RKZ=RKP[0].at[2];
+// Click it and the five F-1s light and it rises out from behind the roof (Twin Paradox card); step back and it settles
+// as they wind down. Launch opens Twin Paradox. The plume is cut short above the shelf top so it never burns through it.
+var RKHT=.28,RKP=[{at:[.43,.79,-.14],v:{p:[.68,1.12,.78],t:[.47,.92,-.1]}}],RKUP=.1,RKFLOOR=.757,RKX=RKP[0].at[0],RKY=RKP[0].at[1],RKZ=RKP[0].at[2];
 var SVH=1008.13,SVS=RKHT/SVH,rk=grp("rocket",RKX,RKY,RKZ),RKB=grp(0,0,0,0,rk),RKFX=grp(0,RKX,RKY,RKZ),RK={b:0,s:0,t:0};
 // clickable proxy: the real mesh is too heavy to raycast on every pointer move
 var rkHit=cyl(.06,.06,RKHT+.04,new T.MeshBasicMaterial({colorWrite:false,depthWrite:false}),0,RKHT/2,0,rk,12);rkHit.castShadow=rkHit.receiveShadow=false;
@@ -61,14 +60,14 @@ var FCG=flameGeo(3*SVS,13*SVS,95*SVS),FJG=flameGeo(15*SVS,20*SVS,250*SVS),FPG=fl
 [[0,0],[40,0],[-40,0],[0,40],[0,-40]].forEach(function(e){[[FCG,FC,4],[FJG,FJ,3]].forEach(function(q){var m=new T.Mesh(q[0],q[1]);m.position.set(e[0]*SVS,0,e[1]*SVS);m.raycast=function(){};m.renderOrder=q[2];FPL.add(m)})});
 var fpm=new T.Mesh(FPG,FP);fpm.position.y=-45*SVS;fpm.raycast=function(){};fpm.renderOrder=3;FPL.add(fpm);FPL.visible=false;
 var RKL=new T.PointLight(0xff8a3a,0,1.6,2);RKL.position.y=-.08;RKFX.add(RKL);
-function rocketUpdate(t){var dt=Math.min(.05,(t-(RK.t||t))/1000);RK.t=t;var P=RKP[cam.aspect<1?1:0];RKX=P.at[0];RKY=P.at[1];RKZ=P.at[2];rk.position.set(RKX,RKY,RKZ);if(V.rocket!==P.v){V.rocket=P.v;if(focus==="rocket")goal(P.v)}var on=focus==="rocket"?1:0;
+function rocketUpdate(t){var dt=Math.min(.05,(t-(RK.t||t))/1000);RK.t=t;var P=RKP[0];RKX=P.at[0];RKY=P.at[1];RKZ=P.at[2];rk.position.set(RKX,RKY,RKZ);if(V.rocket!==P.v){V.rocket=P.v;if(focus==="rocket")goal(P.v)}var on=focus==="rocket"?1:0;
 RK.b+=(on-RK.b)*Math.min(1,dt*(on?3.2:1.6));if(RK.b<.002&&!on)RK.b=0;RK.s=Math.max(0,RK.s-dt*.7);
 var b=RK.b,f=b*(1+RK.s*.5),s=t/1000,sh=.0007*b;
-RKB.position.set(Math.sin(s*.53)*.004+(Math.random()-.5)*sh,Math.sin(s*1.1)*.007+.025*b*b*(3-2*b)+(Math.random()-.5)*sh,Math.cos(s*.71)*.003+(Math.random()-.5)*sh);
+RKB.position.set(Math.sin(s*.53)*.004+(Math.random()-.5)*sh,Math.sin(s*1.1)*.007+RKUP*b*b*(3-2*b)+(Math.random()-.5)*sh,Math.cos(s*.71)*.003+(Math.random()-.5)*sh);
 RKB.rotation.set(Math.sin(s*.8)*.012*(1-b),Math.sin(s*.27)*.05,Math.sin(s*.63)*.015*(1-b));
 RKFX.position.set(RKX+RKB.position.x,RKY+RKB.position.y,RKZ+RKB.position.z);
 FPL.visible=f>.003;if(!FPL.visible){RKL.intensity=0;return}var fl=.85+.15*Math.random();
-FMS.forEach(function(m){m.uniforms.uT.value=s;m.uniforms.uA.value=Math.min(1,f)*fl});FPL.scale.set(1,.35+.65*f+.08*Math.random(),1);
+FMS.forEach(function(m){m.uniforms.uT.value=s;m.uniforms.uA.value=Math.min(1,f)*fl});FPL.scale.set(1,Math.min(.35+.65*f+.08*Math.random(),Math.max(0,(RKFX.position.y-45*SVS-RKFLOOR)/(780*SVS))),1);
 RKL.intensity=(night?2.2:1.2)*Math.min(1.3,f)*fl}
 function rocketBoost(){RK.s=1}
 function saturnBuild(buf){var dv=new DataView(buf),nv=dv.getUint32(4,true),ni=dv.getUint32(8,true),mn=[0,1,2].map(function(i){return dv.getFloat32(12+i*4,true)}),mx=[0,1,2].map(function(i){return dv.getFloat32(24+i*4,true)});
