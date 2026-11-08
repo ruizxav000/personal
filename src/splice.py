@@ -269,5 +269,21 @@ s=s.replace(a,'\ntune(Math.max(0,TV_CHANNELS.map(function(c){return c.src}).inde
 a='var FLX=-1.0,FLZ=1.86,'
 assert s.count(a)==1
 s=s.replace(a,'var FLX=-.85,FLZ=1.86,')
+# a Saturn V standing on the shelf behind the little house; clicking lights its engines and opens the Twin Paradox card
+a='// ---------- leaning sleeve (now playing) ----------'
+assert s.count(a)==1
+s=s.replace(a,open('parts/saturn.js').read()+'\n'+a)
+a='postcardUpdate();houseUpdate(t);'
+assert s.count(a)==1
+s=s.replace(a,a+'rocketUpdate(t);')
+a='var V={'
+assert s.count(a)==1
+s=s.replace(a,a+'rocket:{p:[.98,1.36,1.38],t:[.48,1.0,-.1]},')
+a='lamp:{t:"Mood"'
+assert s.count(a)==1
+s=s.replace(a,'rocket:{t:"Twin Paradox",x:"A first-person trip to a black hole that I built, ray traced live in your browser. Best on a computer, with sound on.",b:"Launch \u2197"},'+a)
+a='$("go").onclick=function(){'
+assert s.count(a)==1
+s=s.replace(a,a+'if(tag==="rocket"){rocketBoost();window.open(TWIN_URL,"_blank","noopener");return}')
 open('main.js','w').write(s)
 print('ok',len(s))

@@ -98,7 +98,7 @@ var POSTERS=[
 {k:"bear",src:"posters/dropout-bear.jpg",ar:1,x:.98,y:1.02,w:.25,r:-.05,hang:"tape",t:"The Dropout Bear",c:""}
 ];
 // TV channels, in order. Each is a 4:3 clip in media/ saved as both .mp4 and .webm (list it without the extension). Click the TV to flip through them.
-// Where the rocket on the shelf takes you
+// Where the rocket behind the little house takes you
 var TWIN_URL="https://claude.ai/artifact/N3rya4kPj5kA7Ky8Pkypf4";
 // The channel the TV is on when the page loads
 var TV_START="media/tv-ch5";
