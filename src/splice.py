@@ -297,5 +297,12 @@ for a,b in [('vid.addEventListener("loadeddata",function(){VID_OK=true;tuned();'
             ('\ntune(Math.max(0,TV_CHANNELS.map(function(c){return c.src}).indexOf(TV_START)));\n','\ntune(Math.max(0,TV_CHANNELS.map(function(c){return c.src}).indexOf(TV_START)));\nfunction tvKick(){if(TV_ON&&vid.paused&&LOADED>=0)vid.play().catch(function(){})}["pointerdown","touchend","keydown"].forEach(function(e){addEventListener(e,tvKick,{passive:true})});document.addEventListener("visibilitychange",function(){if(!document.hidden)tvKick()});\n')]:
     assert s.count(a)==1,a
     s=s.replace(a,b)
+# TV close-up: a pill above Step back says how to change the channel, shown only while you're at the TV
+a='postcardUpdate();houseUpdate(t);'
+assert s.count(a)==1
+s=s.replace(a,'postcardUpdate();houseUpdate(t);TVH.classList.toggle("on",focus==="tv");')
+a='// ---------- leaning sleeve (now playing) ----------'
+assert s.count(a)==1
+s=s.replace(a,'var TVH=$("tvhint");TVH.textContent=(matchMedia("(hover:none)").matches?"Tap":"Click")+" the knob to change the channel";\n'+a)
 open('main.js','w').write(s)
 print('ok',len(s))
