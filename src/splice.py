@@ -269,7 +269,7 @@ s=s.replace(a,'\ntune(Math.max(0,TV_CHANNELS.map(function(c){return c.src}).inde
 a='var FLX=-1.0,FLZ=1.86,'
 assert s.count(a)==1
 s=s.replace(a,'var FLX=-.85,FLZ=1.86,')
-# a floating Saturn V behind the little house; clicking lights its engines and opens the Twin Paradox card
+# a Saturn V standing on the shelf behind the little house; clicking lights its engines and opens the Twin Paradox card
 a='// ---------- leaning sleeve (now playing) ----------'
 assert s.count(a)==1
 s=s.replace(a,open('parts/saturn.js').read()+'\n'+a)
@@ -278,7 +278,7 @@ assert s.count(a)==1
 s=s.replace(a,a+'rocketUpdate(t);')
 a='var V={'
 assert s.count(a)==1
-s=s.replace(a,a+'rocket:{p:[.68,1.12,.78],t:[.47,.92,-.1]},')
+s=s.replace(a,a+'rocket:{p:[.8,1.28,1.02],t:[.46,1.12,-.1]},')
 a='lamp:{t:"Mood"'
 assert s.count(a)==1
 s=s.replace(a,'rocket:{t:"Twin Paradox",x:"A first-person trip to a black hole that I built, ray traced live in your browser. Best on a computer, with sound on.",b:"Launch \u2197"},'+a)
