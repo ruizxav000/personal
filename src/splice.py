@@ -285,5 +285,24 @@ s=s.replace(a,'rocket:{t:"Twin Paradox",x:"A first-person trip to a black hole t
 a='$("go").onclick=function(){'
 assert s.count(a)==1
 s=s.replace(a,a+'if(tag==="rocket"){rocketBoost();window.open(TWIN_URL,"_blank","noopener");return}')
+# the hint points people at the house, where the about panel lives
+a='$("hint").textContent=touchUI?"Drag to look around · tap things":"Drag to look around · click things";'
+assert s.count(a)==1
+s=s.replace(a,'$("hint").textContent=touchUI?"Drag to look around · tap things · start at the house":"Drag to look around · click things · start at the house";')
+# TV: never a black screen. Static holds until the video is really playing (a browser that refuses autoplay, as iPhones in
+# Low Power Mode do, leaves it paused); the first tap, click or key anywhere starts it, and coming back to the tab resumes it
+for a,b in [('vid.addEventListener("loadeddata",function(){VID_OK=true;tuned();','vid.addEventListener("loadeddata",function(){VID_OK=true;'),
+            ('vid.addEventListener("playing",tuned);','vid.addEventListener("playing",function(){TUNING=true;tuned()});'),
+            ('CRT.uniforms.uStatic.value=TUNING||!VID_OK?1:','CRT.uniforms.uStatic.value=TUNING||!VID_OK||(TV_ON&&vid.paused)?1:'),
+            ('\ntune(Math.max(0,TV_CHANNELS.map(function(c){return c.src}).indexOf(TV_START)));\n','\ntune(Math.max(0,TV_CHANNELS.map(function(c){return c.src}).indexOf(TV_START)));\nfunction tvKick(){if(TV_ON&&vid.paused&&LOADED>=0)vid.play().catch(function(){})}["pointerdown","touchend","keydown"].forEach(function(e){addEventListener(e,tvKick,{passive:true})});document.addEventListener("visibilitychange",function(){if(!document.hidden)tvKick()});\n')]:
+    assert s.count(a)==1,a
+    s=s.replace(a,b)
+# TV close-up: a pill above Step back says how to change the channel, shown only while you're at the TV
+a='postcardUpdate();houseUpdate(t);'
+assert s.count(a)==1
+s=s.replace(a,'postcardUpdate();houseUpdate(t);TVH.classList.toggle("on",focus==="tv");')
+a='// ---------- leaning sleeve (now playing) ----------'
+assert s.count(a)==1
+s=s.replace(a,'var TVH=$("tvhint");TVH.textContent=(matchMedia("(hover:none)").matches?"Tap":"Click")+" the knob to change the channel";\n'+a)
 open('main.js','w').write(s)
 print('ok',len(s))

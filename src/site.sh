@@ -15,4 +15,5 @@ echo '<link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="manife
 echo '<meta name="description" content="Xavier Ruiz · Product Marketing · Boston. Click around the room to learn more about me.">'
 sed 's#<title>The Room (3D)</title>#<title>Xavier Ruiz</title>#' the-room.html
 } > ../index.html
+python3 seo.py || exit 1
 rm -f main.js the-room.html

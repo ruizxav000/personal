@@ -17,6 +17,7 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;paddin
 .name p{margin:clamp(8px,1.2vw,18px) 0 0;color:#ece6dc;font-size:clamp(17px,2vw,30px);letter-spacing:-.005em;font-weight:400}.name{text-shadow:0 1px 2px rgba(0,0,0,.35),0 2px 22px rgba(0,0,0,.4)}
 
 .hint{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 16px);transform:translateX(-50%);z-index:3;background:rgba(20,20,22,.6);color:#fff;font-size:13px;padding:8px 14px;border-radius:99px;white-space:nowrap;pointer-events:none;transition:opacity .5s}
+.hint.tvh{top:auto;bottom:calc(env(safe-area-inset-bottom,0px) + 76px);opacity:0}.hint.tvh.on{opacity:1}
 .off{opacity:0!important}
 .back{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 22px);z-index:6;background:rgba(18,18,20,.62);color:#fff;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 6px 20px #0004}
 .tip{position:fixed;left:0;top:0;z-index:4;pointer-events:none;background:rgba(18,18,20,.72);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#fff;font-size:13px;font-weight:700;padding:6px 11px;border-radius:99px;white-space:nowrap;transform:translate(14px,14px)}.tip span{font-weight:400;opacity:.75;margin-left:6px}
@@ -70,7 +71,7 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;paddin
 <canvas id="c" aria-label="A 3D view of a white cube shelf with a turntable, a lava lamp, a plant and a record collection"></canvas>
 <div id="vig"></div><div class="tip" id="tip" hidden></div>
 <div class="name" id="name"><h1>Xavier Ruiz</h1><p>Product Marketing</p></div>
-<div class="hint" id="hint">Drag to look around · tap things</div>
+<div class="hint tvh" id="tvhint" aria-live="polite"></div><div class="hint" id="hint">Drag to look around · tap things · start at the house</div>
 <div id="sheet" role="region" aria-live="polite"></div><button class="btn back" id="back" hidden>Step back</button><aside id="about" class="about" aria-label="About Xavier"></aside>
 <div id="inspect" role="dialog" aria-modal="true" aria-label="Record">
   <canvas id="ic" aria-label="The record you picked up. Drag to turn it."></canvas>

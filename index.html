@@ -7,6 +7,10 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32"><link rel="icon" href="favicon.ico" sizes="any">
 <link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="manifest" href="site.webmanifest">
 <meta name="description" content="Xavier Ruiz · Product Marketing · Boston. Click around the room to learn more about me.">
+<link rel="canonical" href="https://xavierruiz.io/">
+<meta property="og:type" content="profile"><meta property="og:url" content="https://xavierruiz.io/"><meta property="og:title" content="Xavier Ruiz"><meta property="og:description" content="Xavier Ruiz · Product Marketing · Boston. Click around the room to learn more about me."><meta property="og:site_name" content="Xavier Ruiz">
+<meta name="twitter:card" content="summary"><meta name="twitter:title" content="Xavier Ruiz"><meta name="twitter:description" content="Xavier Ruiz · Product Marketing · Boston. Click around the room to learn more about me.">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Person", "name": "Xavier Ruiz", "url": "https://xavierruiz.io/", "jobTitle": "Product Marketing", "worksFor": {"@type": "Organization", "name": "ServiceNow"}, "address": {"@type": "PostalAddress", "addressLocality": "Boston", "addressRegion": "MA", "addressCountry": "US"}, "alumniOf": {"@type": "CollegeOrUniversity", "name": "Texas A&M University"}, "sameAs": ["https://www.linkedin.com/in/xavier-ruiz-0b1617201"]}</script>
 <title>Xavier Ruiz</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,700&family=Caveat:wght@600&family=Cormorant+Garamond:wght@500;600&display=swap" rel="stylesheet">
@@ -26,6 +30,7 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;paddin
 .name p{margin:clamp(8px,1.2vw,18px) 0 0;color:#ece6dc;font-size:clamp(17px,2vw,30px);letter-spacing:-.005em;font-weight:400}.name{text-shadow:0 1px 2px rgba(0,0,0,.35),0 2px 22px rgba(0,0,0,.4)}
 
 .hint{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 16px);transform:translateX(-50%);z-index:3;background:rgba(20,20,22,.6);color:#fff;font-size:13px;padding:8px 14px;border-radius:99px;white-space:nowrap;pointer-events:none;transition:opacity .5s}
+.hint.tvh{top:auto;bottom:calc(env(safe-area-inset-bottom,0px) + 76px);opacity:0}.hint.tvh.on{opacity:1}
 .off{opacity:0!important}
 .back{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 22px);z-index:6;background:rgba(18,18,20,.62);color:#fff;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 6px 20px #0004}
 .tip{position:fixed;left:0;top:0;z-index:4;pointer-events:none;background:rgba(18,18,20,.72);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#fff;font-size:13px;font-weight:700;padding:6px 11px;border-radius:99px;white-space:nowrap;transform:translate(14px,14px)}.tip span{font-weight:400;opacity:.75;margin-left:6px}
@@ -75,11 +80,16 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;paddin
 .info h3{margin:0;font-size:21px;line-height:1.15}.info .by{margin:3px 0 0;font-size:15px}
 .info .meta{margin:6px 0 0;color:var(--muted);font-size:13.5px}.info .note{margin:8px 0 0;color:var(--muted);font-size:14px;line-height:1.45}
 @media (pointer:coarse){body{height:calc(100vh + env(safe-area-inset-bottom,0px) + 72px);height:calc(100lvh + env(safe-area-inset-bottom,0px) + 72px)}}@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.sr{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
 </style>
-<canvas id="c" aria-label="A 3D view of a white cube shelf with a turntable, a lava lamp, a plant and a record collection"></canvas>
+<main class="sr" aria-label="About Xavier Ruiz"><h2>About</h2><p>Howdy! I&#x27;m Xavier Ruiz, a Boston based Product Marketer for ServiceNow. Welcome to my page!</p><p>My focus is competitive positioning: turning market and competitive intel into evidence-backed arguments our sellers can use to frame a deal before the competition does. Behind the scenes, I build the data pipelines and automations that keep that intel fresh and take the manual work out of it.</p><p>I studied Technology Management at Texas A&amp;M which made me both love and hate programming. I grew up a musician, playing guitar and violin for 10+ years, and these days that creative streak goes into building things with AI (like this room). The records on the shelf are my actual collection, so pull one out and have a look. Almost everything on the page is interactive ff to click around to learn more about me.</p>
+<h2>Contact</h2><ul><li><a tabindex="-1" href="mailto:xavier.ruiz@servicenow.com">xavier.ruiz@servicenow.com</a></li><li><a tabindex="-1" href="https://www.linkedin.com/in/xavier-ruiz-0b1617201">LinkedIn profile</a></li></ul>
+<h2>Education</h2><p>Texas A&amp;M University: Bachelor of Science in Technology Management, College of Education and Human Development. Class of 2022.</p>
+<h2>Built for fun</h2><p><a tabindex="-1" href="https://claude.ai/artifact/N3rya4kPj5kA7Ky8Pkypf4">Twin Paradox</a>: a first-person trip to a black hole, ray traced live in your browser.</p></main>
+<canvas id="c" aria-label="A 3D room: a shelf of records with a turntable, a lava lamp, a little house, a Saturn V model, posters, a diploma and an old TV"></canvas>
 <div id="vig"></div><div class="tip" id="tip" hidden></div>
 <div class="name" id="name"><h1>Xavier Ruiz</h1><p>Product Marketing</p></div>
-<div class="hint" id="hint">Drag to look around · tap things</div>
+<div class="hint tvh" id="tvhint" aria-live="polite"></div><div class="hint" id="hint">Drag to look around · tap things · start at the house</div>
 <div id="sheet" role="region" aria-live="polite"></div><button class="btn back" id="back" hidden>Step back</button><aside id="about" class="about" aria-label="About Xavier"></aside>
 <div id="inspect" role="dialog" aria-modal="true" aria-label="Record">
   <canvas id="ic" aria-label="The record you picked up. Drag to turn it."></canvas>
@@ -844,6 +854,7 @@ var m=mesh(g,SVMAT,0,0,0,SV);m.raycast=function(){}}
 fetch("media/saturnv.txt").then(function(r){if(!r.ok)throw 0;return r.text()}).then(function(s){s=atob(s.trim());var u=new Uint8Array(s.length);for(var i=0;i<s.length;i++)u[i]=s.charCodeAt(i);var b=u.buffer;
 if(u[0]===0x1f&&u[1]===0x8b){if(!window.DecompressionStream)throw 0;return new Response(new Blob([b]).stream().pipeThrough(new DecompressionStream("gzip"))).arrayBuffer()}return b}).then(saturnBuild).catch(function(){});
 
+var TVH=$("tvhint");TVH.textContent=(matchMedia("(hover:none)").matches?"Tap":"Click")+" the knob to change the channel";
 // ---------- leaning sleeve (now playing) ----------
 var sl=grp("sleeve",.27,.75,-.15);sl.rotation.x=-.14;sl.rotation.y=-.08;
 var sleeve=box(.312,.312,.004,[PAPER,PAPER,PAPER,PAPER,coverMat(NOW),coverMat(NOW,1)],0,.156,0,sl);
@@ -1112,11 +1123,12 @@ tvL=new T.PointLight(0x9fc4ff,.2,1.6,2);tvL.color.convertSRGBToLinear();fr.add(t
 // video channels: play muted on the screen, sound on when you tune in, flip channels with a burst of static
 var TUNE_T=0,vid=document.createElement("video"),VID_OK=false,TVCH=0,VT=null;vid.muted=true;vid.loop=true;vid.playsInline=true;vid.setAttribute("playsinline","");vid.preload="auto";
 var TUNING=false,LOADED=-1,TUNE_TO=0;function tuned(){if(!TUNING)return;TUNING=false;clearTimeout(TUNE_TO);TUNE_T=performance.now()}
-vid.addEventListener("playing",tuned);vid.addEventListener("loadeddata",function(){VID_OK=true;tuned();if(!VT){VT=new T.VideoTexture(vid);VT.minFilter=VT.magFilter=T.LinearFilter;CRT.uniforms.tMap.value=VT}vid.play().catch(function(){});if(typeof focus!=="undefined"&&focus==="tv")open_("tv")});
+vid.addEventListener("playing",function(){TUNING=true;tuned()});vid.addEventListener("loadeddata",function(){VID_OK=true;if(!VT){VT=new T.VideoTexture(vid);VT.minFilter=VT.magFilter=T.LinearFilter;CRT.uniforms.tMap.value=VT}vid.play().catch(function(){});if(typeof focus!=="undefined"&&focus==="tv")open_("tv")});
 vid.addEventListener("error",function(){VID_OK=false;tuned();CRT.uniforms.tMap.value=TVTEX});
 var TV_ON=true,TVON=1;function tvPower(rot){TV_ON=!TV_ON;KNOB.tvpow.userData.rz+=rot==null?-PI/2:rot;KNOB.tvpow.userData.pz=TV_ON?.005:0;if(TV_ON){TUNE_T=performance.now();if(LOADED!==TVCH)tune(TVCH,true);else vid.play().catch(function(){})}else setTimeout(function(){if(!TV_ON)vid.pause()},500)}
 function tune(i,held){if(!held)KNOB.tvch.userData.rz-=PI/6;var n=TV_CHANNELS.length;if(!n)return;TVCH=((i%n)+n)%n;if(!TV_ON)return;LOADED=TVCH;TUNING=true;TUNE_T=performance.now();clearTimeout(TUNE_TO);TUNE_TO=setTimeout(tuned,5000);vid.src=TV_CHANNELS[TVCH].src+(vid.canPlayType('video/mp4; codecs="avc1.640028, mp4a.40.2"')?".mp4":".webm");vid.load();vid.play().catch(function(){})}
 tune(Math.max(0,TV_CHANNELS.map(function(c){return c.src}).indexOf(TV_START)));
+function tvKick(){if(TV_ON&&vid.paused&&LOADED>=0)vid.play().catch(function(){})}["pointerdown","touchend","keydown"].forEach(function(e){addEventListener(e,tvKick,{passive:true})});document.addEventListener("visibilitychange",function(){if(!document.hidden)tvKick()});
 
 seed=1641327418;// ---------- framed diploma above the shelf ----------
 // cherry-mahogany moulding with dark lips, black top mat, thin gold inner mat
@@ -1369,7 +1381,7 @@ function layerTag(tag,on){scene.traverse(function(o){if(o.userData.tag===tag)o.t
 function setHover(tag){if(tag===HOV)return;if(HOV)layerTag(HOV,false);HOV=tag;if(tag)layerTag(tag,true);cv.classList.toggle("hov",!!tag);
 var t=false;if(t&&!inspecting){tip.innerHTML=esc(t[0])+"<span>"+esc(typeof t[1]==="function"?t[1]():t[1])+"</span>";tip.hidden=false}else tip.hidden=true}
 var dr=null,mv=false,cv=$("c"),touchUI=matchMedia("(hover:none)").matches;
-$("hint").textContent=touchUI?"Drag to look around · tap things":"Drag to look around · click things";
+$("hint").textContent=touchUI?"Drag to look around · tap things · start at the house":"Drag to look around · click things · start at the house";
 var CD=null;function rayZ(e){NDC(e);ray.setFromCamera(m2,cam);var o=ray.ray.origin,d=ray.ray.direction;return Math.abs(d.x)<1e-4?null:o.z+d.z*(CX-o.x)/d.x}
 var KD=null;function kAng(e){return Math.atan2(-(e.clientY-KD.cy),e.clientX-KD.cx)}
 cv.addEventListener("pointerdown",function(e){var p=pick(e);if(p&&(p.tag==="tvch"||p.tag==="tvpow")&&!inspecting){var k=KNOB[p.tag],w=new T.Vector3();k.getWorldPosition(w).project(cam);KD={tag:p.tag,k:k,cx:(w.x+1)/2*ren.domElement.clientWidth,cy:(1-w.y)/2*ren.domElement.clientHeight,x:e.clientX,y:e.clientY,r0:k.userData.rz,acc:0,moved:false};KD.a=kAng(e);hint();return}if(p&&p.tag==="curtain"&&!inspecting){var z=rayZ(e);CD={off:z==null?0:curLeadT-z,moved:false,x:e.clientX,y:e.clientY};hint();return}dr={x:e.clientX,y:e.clientY,yw:yaw,pt:pit};mv=false});
@@ -1389,7 +1401,7 @@ function frame(t){requestAnimationFrame(frame);var dt=Math.min((t-last)/1000||.0
 rec.rotation.y=-(t/1000)*(100/3)/60*2*PI%(2*PI);var k=1-Math.pow(.0005,dt);cp.lerp(gp,k);ct.lerp(gt,k);ay+=(yaw-ay)*.12;ap+=(pit-ap)*.12;
 var pn=nt;nt+=((night?1:0)-nt)*.05;if(Math.abs(nt-(night?1:0))<.002)nt=night?1:0;if(nt!==pn||!started)setLight(nt);document.body.classList.toggle("night",nt>.5);
 var want=nt>.5?ENVN:ENVD;if(want!==curEnv){curEnv=CUR_ENV=want;ALLM.forEach(function(m){m.envMap=want})}
-curLead+=(curLeadT-curLead)*.12;var cov=Math.max(0,Math.min(1,(WZ1-.11-Math.max(curLead,WZ0-.11))/(WZ1-WZ0)));if(Math.abs(cov-COV)>.004){COV=cov;SHEER=1-.55*cov;setLight(nt)}var cw=CZF-curLead;curt.scale.x=cw/.42;curt.position.z=(CZF+curLead)/2;RINGS.forEach(function(r,i){r.position.z=CZF-.02-(cw-.04)*i/(RINGS.length-1)});LAMPV+=((LAMP_ON?1:0)-LAMPV)*Math.min(1,dt*8);FLL.intensity=LAMPV*(.62+.3*nt);FLD.intensity=LAMPV*.4;LBULB.emissiveIntensity=LAMPV*3;LSH.emissiveIntensity=LAMPV*(.55+.25*nt);plantSway(t,Math.max(0,Math.sin(t*.00045)*.6+Math.sin(t*.00113+1.7)*.3));wind(t*.001);TVON+=((TV_ON?1:0)-TVON)*Math.min(1,dt*(TV_ON?5:7));CRT.uniforms.uOn.value=TVON;[KNOB.tvch,KNOB.tvpow].forEach(function(k){k.rotation.z+=(k.userData.rz-k.rotation.z)*Math.min(1,dt*12)});KNOB.tvpow.position.z+=(KNOB.tvpow.userData.z+KNOB.tvpow.userData.pz-KNOB.tvpow.position.z)*Math.min(1,dt*12);CRT.uniforms.uT.value=t*.001;CRT.uniforms.uStatic.value=TUNING||!VID_OK?1:Math.max(0,1-(performance.now()-TUNE_T)/350);tvL.intensity=(.18+.05*Math.sin(t*.013)*Math.sin(t*.0071))*(1+nt*1.5)*TVON;lavaUpdate(t);postcardUpdate();houseUpdate(t);rocketUpdate(t);HDOOR.rotation.y+=((focus==="house"?-1.25:0)-HDOOR.rotation.y)*Math.min(1,dt*4);BL.forEach(function(b){var ph=t*.001*b.s+b.p,u=.5-.5*Math.cos(ph),y=.012+u*.15,v=Math.sin(ph),rr_=Math.min(b.r,gr_(y)*.72);b.m.position.set(b.x*gr_(y)/.03,.08+y,0);b.m.scale.set(rr_*(1-.12*Math.abs(v)),rr_*(1+.35*Math.abs(v)),rr_*(1-.12*Math.abs(v)))});
+curLead+=(curLeadT-curLead)*.12;var cov=Math.max(0,Math.min(1,(WZ1-.11-Math.max(curLead,WZ0-.11))/(WZ1-WZ0)));if(Math.abs(cov-COV)>.004){COV=cov;SHEER=1-.55*cov;setLight(nt)}var cw=CZF-curLead;curt.scale.x=cw/.42;curt.position.z=(CZF+curLead)/2;RINGS.forEach(function(r,i){r.position.z=CZF-.02-(cw-.04)*i/(RINGS.length-1)});LAMPV+=((LAMP_ON?1:0)-LAMPV)*Math.min(1,dt*8);FLL.intensity=LAMPV*(.62+.3*nt);FLD.intensity=LAMPV*.4;LBULB.emissiveIntensity=LAMPV*3;LSH.emissiveIntensity=LAMPV*(.55+.25*nt);plantSway(t,Math.max(0,Math.sin(t*.00045)*.6+Math.sin(t*.00113+1.7)*.3));wind(t*.001);TVON+=((TV_ON?1:0)-TVON)*Math.min(1,dt*(TV_ON?5:7));CRT.uniforms.uOn.value=TVON;[KNOB.tvch,KNOB.tvpow].forEach(function(k){k.rotation.z+=(k.userData.rz-k.rotation.z)*Math.min(1,dt*12)});KNOB.tvpow.position.z+=(KNOB.tvpow.userData.z+KNOB.tvpow.userData.pz-KNOB.tvpow.position.z)*Math.min(1,dt*12);CRT.uniforms.uT.value=t*.001;CRT.uniforms.uStatic.value=TUNING||!VID_OK||(TV_ON&&vid.paused)?1:Math.max(0,1-(performance.now()-TUNE_T)/350);tvL.intensity=(.18+.05*Math.sin(t*.013)*Math.sin(t*.0071))*(1+nt*1.5)*TVON;lavaUpdate(t);postcardUpdate();houseUpdate(t);TVH.classList.toggle("on",focus==="tv");rocketUpdate(t);HDOOR.rotation.y+=((focus==="house"?-1.25:0)-HDOOR.rotation.y)*Math.min(1,dt*4);BL.forEach(function(b){var ph=t*.001*b.s+b.p,u=.5-.5*Math.cos(ph),y=.012+u*.15,v=Math.sin(ph),rr_=Math.min(b.r,gr_(y)*.72);b.m.position.set(b.x*gr_(y)/.03,.08+y,0);b.m.scale.set(rr_*(1-.12*Math.abs(v)),rr_*(1+.35*Math.abs(v)),rr_*(1-.12*Math.abs(v)))});
 var dir=ct.clone().sub(cp),sp=new T.Spherical().setFromVector3(dir);sp.theta+=ay;sp.phi=Math.min(Math.max(sp.phi-ap,.3),2.8);dir.setFromSpherical(sp);
 cam.position.copy(cp);cam.position.x+=Math.sin(t*.00037)*.006;cam.position.y+=Math.sin(t*.00029)*.004;cam.lookAt(cam.position.clone().add(dir));var fx=focus==="bean"?16:0;if(Math.abs(fx-FOVX)>.01){FOVX+=(fx-FOVX)*Math.min(1,dt*3);cam.fov=BFOV+FOVX;cam.updateProjectionMatrix()}cam.updateMatrixWorld();
 DUST.uniforms.uTime.value=t*.001;TL.value.copy(key.position).sub(key.target.position).normalize().transformDirection(cam.matrixWorldInverse);TI.value=key.intensity*.18*SHEER+LAMPV*.25;DL[0].set(FLX,1.25,FLZ);DLC[0].setRGB(1,.62,.3).multiplyScalar(.55*LAMPV);DL[1].set(-.37,.95,-.03);DLC[1].setRGB(1,.35,.6).multiplyScalar(.1+.35*nt);
