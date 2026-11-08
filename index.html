@@ -747,7 +747,8 @@ seed=-780401805;// a floating model of the Apollo 11 Saturn V, built from the 3D
 // F-1s, fairings and fins; the S-IC/S-II interstage with its ullage motors; the S-II with its J-2s and the conical
 // interstage; the S-IVB; the lunar module adapter; the service module; the command module under its boost cover; and the
 // escape tower). The parts are assembled, culled where sealed inside one another, and packed in media/saturnv.txt
-// (gzipped binary, base64 so every host serves it). It stands in the back right corner of the shelf top, behind
+// (gzipped binary, base64 so every host serves it). The tank walls, which came out of the print
+// files slightly lumpy and faceted, are trued to round cylinders with smooth normals, and it wears a satin painted finish. It stands in the back right corner of the shelf top, behind
 // the little house, set in evenly from the right and back edges.
 // Paint, Apollo 11 (AS-506): white overall; S-IC roll pattern of four black stripes from the base to the intertank;
 // a flag over a red "USA" on the LOX tank on four sides; "UNITED STATES" down the S-II on four sides; the two-bit roll
@@ -782,7 +783,7 @@ for(var o=-360;o<=360;o+=360){var cx=X(deg+o);if(cx<-80||cx>W+80)continue;x.save
 flag(132.75,889,9,5,19.5);letters(132.75,"UNITED STATES",885,2.2,1.9,2.6,19.5,"#b3202e");
 var t=ctex(c);t.wrapS=T.RepeatWrapping;return t}
 var SVPAL=[[1,0,1],[.95,.945,.925],[.07,.07,.075],[.16,.16,.18],[.77,.78,.8],[.62,.62,.64]];
-var SVMAT=M(0xffffff,.55,0,{vertexColors:true,side:T.DoubleSide}),SVLIV=saturnLivery(MOB?512:1024,MOB?2048:4096);
+var SVMAT=M(0xffffff,.42,0,{vertexColors:true,side:T.DoubleSide,clearcoat:.45,clearcoatRoughness:.3},1),SVLIV=saturnLivery(MOB?512:1024,MOB?2048:4096);
 SVMAT.onBeforeCompile=function(sh){sh.uniforms.livery={value:SVLIV};sh.uniforms.svH={value:SVH};
 sh.vertexShader=sh.vertexShader.replace("#include <common>","#include <common>\nvarying vec3 vLP;").replace("#include <begin_vertex>","#include <begin_vertex>\nvLP=position;");
 sh.fragmentShader=sh.fragmentShader.replace("#include <common>","#include <common>\nvarying vec3 vLP;uniform sampler2D livery;uniform float svH;").replace("#include <color_fragment>",
