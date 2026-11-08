@@ -757,7 +757,7 @@ seed=-780401805;// a floating model of the Apollo 11 Saturn V, built from the 3D
 // Click it and the five F-1s light and it lifts off the shelf and hovers above the house, drifting (Twin Paradox card);
 // step back and it settles back down as they wind down. Launch opens Twin Paradox. Each flame is cut short above the
 // shelf top so it never burns through it, and grows as the rocket climbs.
-var RKHT=.5,RKP=[{at:[.485,.751,-.125],v:{p:[.83,1.28,1.03],t:[.49,1.12,-.09]}}],RKUP=.22,RKFLOOR=.757,RKX=RKP[0].at[0],RKY=RKP[0].at[1],RKZ=RKP[0].at[2];
+var RKHT=.5,RKP=[{at:[.485,.751,-.125],v:{p:[.98,1.36,1.38],t:[.48,1.0,-.1]}}],RKUP=.22,RKFLOOR=.757,RKX=RKP[0].at[0],RKY=RKP[0].at[1],RKZ=RKP[0].at[2];
 var SVH=1008.13,SVS=RKHT/SVH,rk=grp("rocket",RKX,RKY,RKZ),RKB=grp(0,0,0,0,rk),RKFX=grp(0,RKX,RKY,RKZ),RK={b:0,s:0,t:0};
 // clickable proxy: the real mesh is too heavy to raycast on every pointer move
 var rkHit=cyl(.06,.06,RKHT+.04,new T.MeshBasicMaterial({colorWrite:false,depthWrite:false}),0,RKHT/2,0,rk,12);rkHit.castShadow=rkHit.receiveShadow=false;
@@ -805,18 +805,44 @@ vertexShader:FLV,fragmentShader:FLF,transparent:true,depthWrite:false,blending:T
 var FC=flameMat(0xfff6d6,0xffd070,0xff9020,160,1.2),FJ=flameMat(0xffd27a,0xff8a1e,0xff3c08,90,1),FP=flameMat(0xff9a30,0xff5a10,0x7a1e06,38,.85),FMS=[FC,FJ,FP],FPL=new T.Group();RKFX.add(FPL);
 function flameGeo(r0,r1,len){var g=new T.CylinderGeometry(r1,r0,len,28,12,true);g.translate(0,-len/2,0);return g}
 var FCG=flameGeo(3*SVS,13*SVS,95*SVS),FJG=flameGeo(15*SVS,20*SVS,250*SVS),FPG=flameGeo(125*SVS,55*SVS,780*SVS);
-[[0,0],[40,0],[-40,0],[0,40],[0,-40]].forEach(function(e){[[FCG,FC,4],[FJG,FJ,3]].forEach(function(q){var m=new T.Mesh(q[0],q[1]);m.position.set(e[0]*SVS,0,e[1]*SVS);m.raycast=function(){};m.renderOrder=q[2];FPL.add(m)})});
+[[0,0],[40,0],[-40,0],[0,40],[0,-40]].forEach(function(e,ei){[[FCG,FC,4],[FJG,FJ,3]].forEach(function(q){var m=new T.Mesh(q[0],q[1]);m.position.set(e[0]*SVS,0,e[1]*SVS);m.userData.e=ei;m.raycast=function(){};m.renderOrder=q[2];FPL.add(m)})});
 var fpm=new T.Mesh(FPG,FP);fpm.position.y=-45*SVS;fpm.raycast=function(){};fpm.renderOrder=3;FPL.add(fpm);FPL.visible=false;
 var RKL=new T.PointLight(0xff8a3a,0,1.6,2);RKL.position.y=-.08;RKFX.add(RKL);
-function rocketUpdate(t){var dt=Math.min(.05,(t-(RK.t||t))/1000);RK.t=t;var P=RKP[0];RKX=P.at[0];RKY=P.at[1];RKZ=P.at[2];rk.position.set(RKX,RKY,RKZ);if(V.rocket!==P.v){V.rocket=P.v;if(focus==="rocket")goal(P.v)}var on=focus==="rocket"?1:0;
-RK.b+=(on-RK.b)*Math.min(1,dt*(on?3.2:1.6));if(RK.b<.002&&!on)RK.b=0;RK.s=Math.max(0,RK.s-dt*.7);
-var b=RK.b,f=b*(1+RK.s*.5),s=t/1000,sh=.0007*b;
-var e=b*b*(3-2*b);RKB.position.set((Math.sin(s*.53)*.004+(Math.random()-.5)*sh)*e,(Math.sin(s*1.1)*.007+RKUP+(Math.random()-.5)*sh)*e,(Math.cos(s*.71)*.003+(Math.random()-.5)*sh)*e);
-RKB.rotation.set(Math.sin(s*.8)*.006*e,Math.sin(s*.27)*.05*e,Math.sin(s*.63)*.008*e);
+// on the pad the fire has nowhere to go but out across the shelf top: a flat, turning splash of flame under the engines,
+// and steam and smoke that billow out from the base, roll along the shelf and spill over its edge
+function rkSplashTex(){var c=cvs(256),x=c.getContext("2d"),g=x.createRadialGradient(128,128,0,128,128,128);g.addColorStop(0,"rgba(255,246,214,1)");g.addColorStop(.3,"rgba(255,206,104,1)");g.addColorStop(.6,"rgba(255,128,32,.8)");g.addColorStop(.85,"rgba(200,60,10,.3)");g.addColorStop(1,"rgba(0,0,0,0)");x.fillStyle=g;x.fillRect(0,0,256,256);
+x.globalCompositeOperation="lighter";for(var k=0;k<38;k++){var a=k/38*6.2832+Math.sin(k*7.3)*.12,l=70+((k*53)%47),w=.05+((k*31)%7)*.008;x.fillStyle="rgba(255,"+(120+(k*29)%90)+",40,.16)";x.beginPath();x.moveTo(128,128);x.arc(128,128,l,a-w,a+w);x.closePath();x.fill()}return ctex(c)}
+function rkPuffTex(){var c=cvs(128),x=c.getContext("2d");for(var k=0;k<9;k++){var px=64+Math.sin(k*2.4)*22*(k%3)/2,py=64+Math.cos(k*2.4)*22*(k%3)/2,r=26+(k*13)%18,g=x.createRadialGradient(px,py,0,px,py,r);g.addColorStop(0,"rgba(255,255,255,.55)");g.addColorStop(1,"rgba(255,255,255,0)");x.fillStyle=g;x.fillRect(0,0,128,128)}return ctex(c)}
+var RKSPT=rkSplashTex(),RKSP=new T.Group(),RKSPM=[0,1].map(function(i){var m=new T.Mesh(new T.CircleGeometry(1,40),new T.MeshBasicMaterial({map:RKSPT,color:0xffffff,transparent:true,opacity:0,depthWrite:false,toneMapped:false}));m.rotation.x=-PI/2;m.raycast=function(){};m.renderOrder=5;RKSP.add(m);return m});
+RKSP.position.set(RKX,RKFLOOR-.0045,RKZ);scene.add(RKSP);RKSP.visible=false;
+var RKPT=rkPuffTex(),RKSM=[];for(var rki=0;rki<40;rki++){var rkS=new T.Sprite(new T.SpriteMaterial({map:RKPT,transparent:true,opacity:0,depthWrite:false}));rkS.raycast=function(){};rkS.renderOrder=2;rkS.visible=false;scene.add(rkS);RKSM.push({s:rkS,a:0,l:1,v:new T.Vector3(),r0:.02,r1:.1})}
+RK.y=0;RK.v=0;RK.on=0;RK.tOn=0;RK.hold=0;RK.eng=[0,0,0,0,0];RK.spawn=0;
+// the launch: engines light centre first, then one opposing pair, then the other; it is held down about three seconds
+// while thrust builds, then released, and climbs slowly, gathering speed, before easing into a hover. Stepping back
+// brings it down on throttled engines, which cut at touchdown.
+var RKIGN=[0,.35,.35,.7,.7],RKHOLD=3,RKACC=.025,RKVUP=.05,RKVDN=.045;
+function rocketUpdate(t){var dt=Math.min(.05,(t-(RK.t||t))/1000);RK.t=t;var P=RKP[0];RKX=P.at[0];RKY=P.at[1];RKZ=P.at[2];rk.position.set(RKX,RKY,RKZ);if(V.rocket!==P.v){V.rocket=P.v;if(focus==="rocket")goal(P.v)}
+var on=focus==="rocket"?1:0,s=t/1000;
+if(on&&!RK.on){RK.tOn=0;RK.hold=RK.y<.003?RKHOLD:0}RK.on=on;if(on)RK.tOn+=dt;
+var b=0;for(var i=0;i<5;i++){var g=on?(RK.tOn>(RK.hold?RKIGN[i]:0)?1:RK.eng[i]):(RK.y>.002?.6:0);RK.eng[i]+=(g-RK.eng[i])*Math.min(1,dt*(g>RK.eng[i]?2.4:(on?1:2)));if(RK.eng[i]<.002&&!g)RK.eng[i]=0;b+=RK.eng[i]/5}RK.b=b;
+RK.s=Math.max(0,RK.s-dt*.7);
+// thrust-limited climb and descent: slow off the pad, speeding up, then settling
+var tgt=on&&RK.tOn>RK.hold?RKUP:0,dv=tgt>RK.y?Math.min(RKVUP,(tgt-RK.y)*.9):-Math.min(RKVDN,Math.max(.006,(RK.y-tgt)*.9));if(Math.abs(tgt-RK.y)<.0004&&!tgt)dv=0;
+RK.v+=Math.max(-RKACC*dt,Math.min(RKACC*dt,dv-RK.v));RK.y+=RK.v*dt;if(RK.y<=0){RK.y=0;RK.v=Math.max(0,RK.v)}
+var h=Math.min(1,RK.y/RKUP),f=b*(1+RK.s*.5),sh=.0011*b*(1-.7*h);
+RKB.position.set(Math.sin(s*.53)*.004*h+(Math.random()-.5)*sh,RK.y+Math.sin(s*1.1)*.007*h*h+(Math.random()-.5)*sh*.5,Math.cos(s*.71)*.003*h+(Math.random()-.5)*sh);
+RKB.rotation.set(Math.sin(s*.8)*.006*h+(Math.random()-.5)*sh*.8,Math.sin(s*.27)*.05*h,Math.sin(s*.63)*.008*h+(Math.random()-.5)*sh*.8);
 RKFX.position.set(RKX+RKB.position.x,RKY+RKB.position.y,RKZ+RKB.position.z);
-FPL.visible=f>.003;if(!FPL.visible){RKL.intensity=0;return}var fl=.85+.15*Math.random();
-FMS.forEach(function(m){m.uniforms.uT.value=s;m.uniforms.uA.value=Math.min(1,f)*fl});var gap=Math.max(0,RKFX.position.y-RKFLOOR),fs=.35+.65*f+.08*Math.random();FPL.children.forEach(function(m){var L=m.geometry.parameters.height,y0=-m.position.y;var k=Math.min(fs,(gap-y0)/L);m.visible=k>.01;m.scale.y=Math.max(.01,k)});
-RKL.intensity=(night?2.2:1.2)*Math.min(1.3,f)*fl}
+var gap=Math.max(0,RKFX.position.y-RKFLOOR),pad=b*Math.max(0,1-gap/.1),fl=.85+.15*Math.random();
+FPL.visible=f>.003;if(FPL.visible){FMS.forEach(function(m){m.uniforms.uT.value=s;m.uniforms.uA.value=Math.min(1,f)*fl});
+FPL.children.forEach(function(m){var L=m.geometry.parameters.height,y0=-m.position.y,e=m.userData.e,lv=e==null?f:RK.eng[e]*(1+RK.s*.5),k=Math.min(.35+.65*lv+.08*Math.random(),(gap-y0)/L);m.visible=k>.01&&lv>.02;m.scale.set(e==null?1:.45+.55*Math.min(1,lv),Math.max(.01,k),e==null?1:.45+.55*Math.min(1,lv))})}
+RKSP.position.set(RKX,RKFLOOR-.0045,RKZ);RKSP.visible=pad>.01;if(RKSP.visible)RKSPM.forEach(function(m,i){var r=(.055+.03*pad)*(1+.08*Math.sin(s*(23+i*7))+.05*Math.random())*(i?.7:1);m.scale.set(r,r,1);m.rotation.z=s*(i?-1.7:1.1);m.material.opacity=Math.min(1,pad*1.3)*fl*(i?.8:1);m.material.color.setScalar(1.25+.5*fl)});
+// smoke: born at the base while the fire is on the shelf, rolling outward and up, growing and thinning
+RK.spawn+=dt*pad*16;while(RK.spawn>=1){RK.spawn-=1;for(var j=0;j<RKSM.length&&RKSM[j].a<RKSM[j].l;j++);if(j===RKSM.length)break;var q=RKSM[j],an=Math.random()*6.2832,sp2=.07+.08*Math.random();
+q.a=0;q.l=2.2+Math.random()*1.6;q.s.position.set(RKX+Math.cos(an)*.04,RKFLOOR+.018,RKZ+Math.sin(an)*.04);q.v.set(Math.cos(an)*sp2,.01+.025*Math.random(),Math.sin(an)*sp2);q.r0=.035+.02*Math.random();q.r1=.13+.09*Math.random();q.s.visible=true;q.s.material.rotation=Math.random()*6.28}
+var smc=night?.42:.86;RKSM.forEach(function(q){if(q.a>=q.l){q.s.visible=false;return}q.a+=dt;var u=q.a/q.l;q.v.multiplyScalar(Math.max(0,1-dt*.9));q.v.y+=dt*.006;q.s.position.addScaledVector(q.v,dt);
+var r=q.r0+(q.r1-q.r0)*(1-Math.pow(1-u,2));q.s.scale.set(r,r,1);q.s.material.opacity=Math.min(1,u*5)*Math.pow(1-u,1.3)*.85;var w=pad*.6;q.s.material.color.setRGB(smc+w*.55,smc+w*.3,smc+w*.12);q.s.material.rotation+=dt*.15})
+RKL.position.y=Math.max(-.08,RKFLOOR+.02-RKFX.position.y);RKL.intensity=f>.003?(night?2.2:1.2)*Math.min(1.3,f)*fl:0}
 function rocketBoost(){RK.s=1}
 function saturnBuild(buf){var dv=new DataView(buf),nv=dv.getUint32(4,true),ni=dv.getUint32(8,true),mn=[0,1,2].map(function(i){return dv.getFloat32(12+i*4,true)}),mx=[0,1,2].map(function(i){return dv.getFloat32(24+i*4,true)});
 var o=36,q=new Uint16Array(buf.slice(o,o+nv*6));o+=nv*6;var nr=new Int8Array(buf,o,nv*3);o+=nv*3;var cl=new Uint8Array(buf,o,nv);o+=nv;o+=(4-(nv*10)%4)%4;var ix=new Uint32Array(buf,o,ni);
@@ -1291,7 +1317,7 @@ if(aa){FQ.material=fxaa;ren.setRenderTarget(null);FQ.render(ren)}},atm:atm,comp:
 if(!FX&&POST){POST=false}
 
 // ================= camera + interaction =================
-var V={rocket:{p:[.83,1.28,1.03],t:[.49,1.12,-.09]},home:{p:[0,0,0],t:[0,0,0]},tt:{p:[.1,1.13,.6],t:[-.12,.8,-.02]},lamp:{p:[-.12,1.03,.45],t:[-.37,.9,-.1]},house:{p:[.64,.91,.33],t:[.49,.8,.04]},hg:{p:[.5,.62,.7],t:[.36,.46,.02]},sleeve:{p:[.42,1.0,.52],t:[.27,.9,-.15]},
+var V={rocket:{p:[.98,1.36,1.38],t:[.48,1.0,-.1]},home:{p:[0,0,0],t:[0,0,0]},tt:{p:[.1,1.13,.6],t:[-.12,.8,-.02]},lamp:{p:[-.12,1.03,.45],t:[-.37,.9,-.1]},house:{p:[.64,.91,.33],t:[.49,.8,.04]},hg:{p:[.5,.62,.7],t:[.36,.46,.02]},sleeve:{p:[.42,1.0,.52],t:[.27,.9,-.15]},
 fig:{p:[-.2,1.2,1.35],t:[-.95,.95,.1]},diploma:{p:[.08,1.5,.78],t:[.05,1.5,BZ]}};
 PK.forEach(function(P){var y=P.y0+.17;V["pk:"+P.p.k]={p:[P.cx+.2,y+.05,.88],t:[P.cx,y-.06,.02]}});
 var BFOV=38,FOVX=0,cp=new T.Vector3(),ct=new T.Vector3(),gp=new T.Vector3(),gt=new T.Vector3(),yaw=0,pit=0,ay=0,ap=0,focus=null,night=true,nt=1,inspecting=false;
