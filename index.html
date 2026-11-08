@@ -735,24 +735,28 @@ var n=HNIGHT;LIGHTS.forEach(function(l){var tw=.72+.28*Math.sin(s*l.sp+l.ph);if(
 for(var k in HALOS)HALOS[k].opacity=.12+HNIGHT*.5};
 })();
 seed=-780401805;// ---------- hourglass ----------
-// a desk model of the Apollo 11 Saturn V where the hourglass used to stand, built from the 3D-print model Xavier sent
-// (S-IC in two halves with the F-1s, fairings and fins; the S-IC/S-II interstage with its ullage motors; the S-II with
-// its J-2s and the conical interstage; the S-IVB; the lunar module adapter; the service module; the command module under
-// its boost cover; and the escape tower). The parts are assembled, culled where sealed inside one another, and packed in
-// media/saturnv.txt (gzipped binary, base64 so every host serves it). It stands on four hold-down posts on a walnut plinth.
+var hg=grp(0,.36,.39,.02),GL=M(0xffb84a,.06,0,{transparent:true,opacity:.42,depthWrite:false},1),pr=[[0,0],[.022,.004],[.03,.02],[.028,.04],[.012,.052],[.004,.058],[.012,.064],[.028,.076],[.03,.096],[.022,.112],[0,.116]].map(function(p){return new T.Vector2(p[0],p[1]+.006)});
+cyl(.034,.034,.006,M(0x7a5a2b,.6),0,.003,0,hg);cyl(.034,.034,.006,M(0x7a5a2b,.6),0,.128,0,hg);
+mesh(new T.LatheGeometry(pr,32),GL,0,0,0,hg).castShadow=false;var sd=mesh(new T.LatheGeometry(pr,32),M(0xe0952a,.7),0,.006,0,hg);sd.scale.set(.8,.42,.8);
+
+seed=-780401805;// ---------- the Wish You Were Here postcard, left lying on the shelf: click to look closer, click again to flip it ----------
+var PCD=grp("postcard",.315,.7502,.118);PCD.rotation.y=.34;var PCF=M(0xffffff,.7),PCB=M(0xf3eee2,.8),PCE=M(0xf3eee2,.9);loadInto("covers/wywh-postcard.jpg",PCF);loadInto("covers/wywh-postcard-back.jpg",PCB);
+var PCC=grp(0,0,.0004,0,PCD),PCFL=0;box(.148,.0007,.0985,[PCE,PCE,PCF,PCB,PCE,PCE],0,0,0,PCC).receiveShadow=true;
+function postcardUpdate(){var tg=PCFL*PI;PCC.rotation.x+=(tg-PCC.rotation.x)*.12;PCC.position.y=.0004+.035*Math.abs(Math.sin(PCC.rotation.x))}
+seed=-780401805;// a floating model of the Apollo 11 Saturn V, built from the 3D-print model Xavier sent (S-IC in two halves with the
+// F-1s, fairings and fins; the S-IC/S-II interstage with its ullage motors; the S-II with its J-2s and the conical
+// interstage; the S-IVB; the lunar module adapter; the service module; the command module under its boost cover; and the
+// escape tower). The parts are assembled, culled where sealed inside one another, and packed in media/saturnv.txt
+// (gzipped binary, base64 so every host serves it). It hangs in the air in front of the window, drifting gently.
 // Paint, Apollo 11 (AS-506): white overall; S-IC roll pattern of four black stripes from the base to the intertank;
 // a flag over a red "USA" on the LOX tank on four sides; "UNITED STATES" down the S-II on four sides; the two-bit roll
 // code on the S-II/S-IVB interstage; a black stripe over the S-IVB forward skirt and instrument unit; silver service
 // module with its flag and "UNITED STATES"; black F-1s; light-grey escape tower truss with a dark nose.
-// Click it for the Twin Paradox card.
-var rk=grp("rocket",.36,.39,.02),SVS=2.9e-4,SVH=1008.13,SVLIFT=2;
-var WAL=(function(){var C=[cvs(512),cvs(512)],x=C[0].getContext("2d"),b=C[1].getContext("2d");x.fillStyle="#4d2c18";x.fillRect(0,0,512,512);b.fillStyle=gray(.5);b.fillRect(0,0,512,512);// walnut grain
-for(var i=0;i<160;i++){var y=R()*512,amp=2+R()*6,f=.004+R()*.01,ph=R()*7,a=.06+R()*.22,dk=R()<.6;x.strokeStyle=dk?"rgba(22,10,4,"+a+")":"rgba(170,108,62,"+a*.8+")";b.strokeStyle=dk?gray(.38,.5):gray(.6,.4);x.lineWidth=b.lineWidth=.6+R()*2.6;
-[x,b].forEach(function(c){c.beginPath();for(var xx=-12;xx<=524;xx+=8){var yy=y+Math.sin(xx*f+ph)*amp;xx>-12?c.lineTo(xx,yy):c.moveTo(xx,yy)}c.stroke()})}return[ctex(C[0]),ctex(C[1],1)]})();
-rbox(.075,.012,.075,.006,.002,M(0xffffff,.42,0,{map:WAL[0],bumpMap:WAL[1],bumpScale:.0006}),0,.006,0,rk);
-var SVP=M(0x3a3a3e,.4,.7);[0,1,2,3].forEach(function(k){var a=PI/4+k*PI/2,x=Math.cos(a)*40*SVS,z=Math.sin(a)*40*SVS,h=(47.5+SVLIFT)*SVS;cyl(.0016,.002,h,SVP,x,.012+h/2,z,rk,16)});
+// Click it and the five F-1s light (Twin Paradox card); step back and they wind down. Launch opens Twin Paradox.
+var RKX=-.84,RKY=1.02,RKZ=.8,RKHT=.36;
+var SVH=1008.13,SVS=RKHT/SVH,rk=grp("rocket",RKX,RKY,RKZ),RKB=grp(0,0,0,0,rk),RKFX=grp(0,RKX,RKY,RKZ),RK={b:0,s:0,t:0};
 // clickable proxy: the real mesh is too heavy to raycast on every pointer move
-var rkHit=cyl(.03,.03,.31,new T.MeshBasicMaterial({colorWrite:false,depthWrite:false}),0,.16,0,rk,12);rkHit.castShadow=rkHit.receiveShadow=false;
+var rkHit=cyl(.045,.045,RKHT+.04,new T.MeshBasicMaterial({colorWrite:false,depthWrite:false}),0,RKHT/2,0,rk,12);rkHit.castShadow=rkHit.receiveShadow=false;
 function saturnLivery(W,H){var c=cvs(W,H),x=c.getContext("2d");
 function X(deg){return(.5-deg/360)*W}function Y(mm){return(1-mm/SVH)*H}function pw(mm,R){return mm*W/(2*PI*R)}var ph=H/SVH;
 function band(d0,d1,y0,y1,col){x.fillStyle=col;for(var o=-360;o<=360;o+=360){var a=X(d0+o),b=X(d1+o);x.fillRect(Math.min(a,b),Y(y1),Math.abs(a-b),Y(y0)-Y(y1))}}
@@ -780,7 +784,36 @@ SVMAT.onBeforeCompile=function(sh){sh.uniforms.livery={value:SVLIV};sh.uniforms.
 sh.vertexShader=sh.vertexShader.replace("#include <common>","#include <common>\nvarying vec3 vLP;").replace("#include <begin_vertex>","#include <begin_vertex>\nvLP=position;");
 sh.fragmentShader=sh.fragmentShader.replace("#include <common>","#include <common>\nvarying vec3 vLP;uniform sampler2D livery;uniform float svH;").replace("#include <color_fragment>",
 "#ifdef USE_COLOR\nif(vColor.g<.01&&vColor.r>.99){vec2 lu=vec2(.5-atan(vLP.z,vLP.x)/6.2831853,vLP.y/svH);diffuseColor.rgb*=sRGBToLinear(texture2D(livery,lu)).rgb;}else diffuseColor.rgb*=vColor;\n#endif")};
-var SV=grp(0,0,.012+SVLIFT*SVS,0,rk);SV.scale.setScalar(SVS);SV.rotation.y=-PI/2;
+var SV=grp(0,0,0,0,RKB);SV.scale.setScalar(SVS);SV.rotation.y=-PI/2;
+// engine fire: five F-1 jets (centre and four on the axes, 40 mm out, 17.4 mm exit radius at model scale) that merge into
+// one plume, plus a warm light that throws the glow on the rocket, the window and the floor. Kept outside the clickable
+// group so the hover outline skips it.
+var FLV="varying vec3 vP;varying vec3 vN;varying vec3 vV;varying float vH;uniform float uL;void main(){vec3 p=position;vH=uv.y;vP=p;vec4 w=modelViewMatrix*vec4(p,1.);vN=normalize(normalMatrix*normal);vV=normalize(-w.xyz);gl_Position=projectionMatrix*w;}",
+FLF="varying vec3 vP;varying vec3 vN;varying vec3 vV;varying float vH;uniform float uT,uA,uK;uniform vec3 c0,c1,c2;"+
+"float h3(vec3 p){return fract(sin(dot(p,vec3(127.1,311.7,74.7)))*43758.5453);}"+
+"float n3(vec3 p){vec3 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(mix(h3(i),h3(i+vec3(1,0,0)),f.x),mix(h3(i+vec3(0,1,0)),h3(i+vec3(1,1,0)),f.x),f.y),mix(mix(h3(i+vec3(0,0,1)),h3(i+vec3(1,0,1)),f.x),mix(h3(i+vec3(0,1,1)),h3(i+vec3(1,1,1)),f.x),f.y),f.z);}"+
+"void main(){float d=1.-vH,face=abs(dot(normalize(vN),normalize(vV)));"+
+"float n=n3(vec3(vP.x*uK,vP.y*uK+uT*7.,vP.z*uK))*.65+n3(vec3(vP.x*uK*2.3,vP.y*uK*2.3+uT*13.,vP.z*uK*2.3))*.35;"+
+"float a=pow(face,1.6)*smoothstep(0.,.08,d)*pow(1.-d,1.25)*(.55+.9*n)*uA;"+
+"vec3 c=mix(c2,c1,smoothstep(.15,.75,1.-d+n*.25));c=mix(c,c0,smoothstep(.55,1.,(1.-d)*face+n*.15));gl_FragColor=vec4(c*a,a);}";
+function flameMat(c0,c1,c2,k){return new T.ShaderMaterial({uniforms:{uT:{value:0},uA:{value:0},uK:{value:k},c0:{value:new T.Color(c0)},c1:{value:new T.Color(c1)},c2:{value:new T.Color(c2)}},
+vertexShader:FLV,fragmentShader:FLF,transparent:true,depthWrite:false,blending:T.AdditiveBlending,side:T.DoubleSide})}
+var FJ=flameMat(0xfff6dc,0xffc65a,0xff6a1a,90),FP=flameMat(0xffe2a0,0xff9a3a,0xb8381a,38),FMS=[FJ,FP],FPL=new T.Group();RKFX.add(FPL);
+function flameGeo(r0,r1,len){var g=new T.CylinderGeometry(r1,r0,len,28,12,true);g.translate(0,-len/2,0);return g}
+var FJG=flameGeo(17*SVS,22*SVS,150*SVS),FPG=flameGeo(58*SVS,40*SVS,330*SVS);
+[[0,0],[40,0],[-40,0],[0,40],[0,-40]].forEach(function(e){var m=new T.Mesh(FJG,FJ);m.position.set(e[0]*SVS,0,e[1]*SVS);m.raycast=function(){};m.renderOrder=3;FPL.add(m)});
+var fpm=new T.Mesh(FPG,FP);fpm.position.y=-60*SVS;fpm.raycast=function(){};fpm.renderOrder=3;FPL.add(fpm);FPL.visible=false;
+var RKL=new T.PointLight(0xff8a3a,0,1.6,2);RKL.position.y=-.08;RKFX.add(RKL);
+function rocketUpdate(t){var dt=Math.min(.05,(t-(RK.t||t))/1000);RK.t=t;var on=focus==="rocket"?1:0;
+RK.b+=(on-RK.b)*Math.min(1,dt*(on?3.2:1.6));if(RK.b<.002&&!on)RK.b=0;RK.s=Math.max(0,RK.s-dt*.7);
+var b=RK.b,f=b*(1+RK.s*.5),s=t/1000,sh=.0007*b;
+RKB.position.set(Math.sin(s*.53)*.004+(Math.random()-.5)*sh,Math.sin(s*1.1)*.007+.025*b*b*(3-2*b)+(Math.random()-.5)*sh,Math.cos(s*.71)*.003+(Math.random()-.5)*sh);
+RKB.rotation.set(Math.sin(s*.8)*.012*(1-b),Math.sin(s*.27)*.05,Math.sin(s*.63)*.015*(1-b));
+RKFX.position.set(RKX+RKB.position.x,RKY+RKB.position.y,RKZ+RKB.position.z);
+FPL.visible=f>.003;if(!FPL.visible){RKL.intensity=0;return}var fl=.85+.15*Math.random();
+FMS.forEach(function(m){m.uniforms.uT.value=s;m.uniforms.uA.value=Math.min(1,f)*fl});FPL.scale.set(1,.35+.65*f+.08*Math.random(),1);
+RKL.intensity=(night?2.2:1.2)*Math.min(1.3,f)*fl}
+function rocketBoost(){RK.s=1}
 function saturnBuild(buf){var dv=new DataView(buf),nv=dv.getUint32(4,true),ni=dv.getUint32(8,true),mn=[0,1,2].map(function(i){return dv.getFloat32(12+i*4,true)}),mx=[0,1,2].map(function(i){return dv.getFloat32(24+i*4,true)});
 var o=36,q=new Uint16Array(buf.slice(o,o+nv*6));o+=nv*6;var nr=new Int8Array(buf,o,nv*3);o+=nv*3;var cl=new Uint8Array(buf,o,nv);o+=nv;o+=(4-(nv*10)%4)%4;var ix=new Uint32Array(buf,o,ni);
 var p=new Float32Array(nv*3),col=new Float32Array(nv*3);for(var i=0;i<nv;i++){for(var a=0;a<3;a++){p[i*3+a]=mn[a]+q[i*3+a]/65535*(mx[a]-mn[a]);col[i*3+a]=SVPAL[cl[i]][a]}}
@@ -789,12 +822,7 @@ var m=mesh(g,SVMAT,0,0,0,SV);m.raycast=function(){}}
 fetch("media/saturnv.txt").then(function(r){if(!r.ok)throw 0;return r.text()}).then(function(s){s=atob(s.trim());var u=new Uint8Array(s.length);for(var i=0;i<s.length;i++)u[i]=s.charCodeAt(i);var b=u.buffer;
 if(u[0]===0x1f&&u[1]===0x8b){if(!window.DecompressionStream)throw 0;return new Response(new Blob([b]).stream().pipeThrough(new DecompressionStream("gzip"))).arrayBuffer()}return b}).then(saturnBuild).catch(function(){});
 
-
-seed=-780401805;// ---------- the Wish You Were Here postcard, left lying on the shelf: click to look closer, click again to flip it ----------
-var PCD=grp("postcard",.315,.7502,.118);PCD.rotation.y=.34;var PCF=M(0xffffff,.7),PCB=M(0xf3eee2,.8),PCE=M(0xf3eee2,.9);loadInto("covers/wywh-postcard.jpg",PCF);loadInto("covers/wywh-postcard-back.jpg",PCB);
-var PCC=grp(0,0,.0004,0,PCD),PCFL=0;box(.148,.0007,.0985,[PCE,PCE,PCF,PCB,PCE,PCE],0,0,0,PCC).receiveShadow=true;
-function postcardUpdate(){var tg=PCFL*PI;PCC.rotation.x+=(tg-PCC.rotation.x)*.12;PCC.position.y=.0004+.035*Math.abs(Math.sin(PCC.rotation.x))}
-seed=-780401805;// ---------- leaning sleeve (now playing) ----------
+// ---------- leaning sleeve (now playing) ----------
 var sl=grp("sleeve",.27,.75,-.15);sl.rotation.x=-.14;sl.rotation.y=-.08;
 var sleeve=box(.312,.312,.004,[PAPER,PAPER,PAPER,PAPER,coverMat(NOW),coverMat(NOW,1)],0,.156,0,sl);
 
@@ -1259,7 +1287,7 @@ if(aa){FQ.material=fxaa;ren.setRenderTarget(null);FQ.render(ren)}},atm:atm,comp:
 if(!FX&&POST){POST=false}
 
 // ================= camera + interaction =================
-var V={rocket:{p:[.47,.6,.62],t:[.36,.5,.02]},home:{p:[0,0,0],t:[0,0,0]},tt:{p:[.1,1.13,.6],t:[-.12,.8,-.02]},lamp:{p:[-.12,1.03,.45],t:[-.37,.9,-.1]},house:{p:[.64,.91,.33],t:[.49,.8,.04]},hg:{p:[.5,.62,.7],t:[.36,.46,.02]},sleeve:{p:[.42,1.0,.52],t:[.27,.9,-.15]},
+var V={rocket:{p:[-.1,1.2,1.3],t:[-.84,1.12,.8]},home:{p:[0,0,0],t:[0,0,0]},tt:{p:[.1,1.13,.6],t:[-.12,.8,-.02]},lamp:{p:[-.12,1.03,.45],t:[-.37,.9,-.1]},house:{p:[.64,.91,.33],t:[.49,.8,.04]},hg:{p:[.5,.62,.7],t:[.36,.46,.02]},sleeve:{p:[.42,1.0,.52],t:[.27,.9,-.15]},
 fig:{p:[-.2,1.2,1.35],t:[-.95,.95,.1]},diploma:{p:[.08,1.5,.78],t:[.05,1.5,BZ]}};
 PK.forEach(function(P){var y=P.y0+.17;V["pk:"+P.p.k]={p:[P.cx+.2,y+.05,.88],t:[P.cx,y-.06,.02]}});
 var BFOV=38,FOVX=0,cp=new T.Vector3(),ct=new T.Vector3(),gp=new T.Vector3(),gt=new T.Vector3(),yaw=0,pit=0,ay=0,ap=0,focus=null,night=true,nt=1,inspecting=false;
@@ -1295,7 +1323,7 @@ function open_(tag){hint();if(tag==="floorlamp"){lampToggle();return}if(tag!=="h
 var WV=(tag==="diploma"||tag.indexOf("poster:")===0)?wallView(tag):null;if(WV){var PW=pk(focus);if(PW){focus=null;layPocket(PW)}focus=tag;goal(WV);yaw=pit=0;$("name").classList.add("off");sheet.classList.remove("on");$("back").hidden=false;return}
 if(tag==="tv"||tag==="tvch"||tag==="tvpow"){var PT=pk(focus);if(PT){focus=null;layPocket(PT)}if(tag==="tvch")tune(TVCH+1);if(tag==="tvpow")tvPower();focus="tv";goal(tvView());yaw=pit=0;$("name").classList.add("off");sheet.classList.remove("on");$("back").hidden=false;return}var P=pk(tag),d=TG[tag];if(!d&&!P)return;var P0=pk(focus);if(P0&&P0!==P){focus=null;layPocket(P0)}focus=tag;goal(V[tag]);yaw=pit=0;$("name").classList.add("off");
 $("back").hidden=true;if(P){layPocket(P);pocketSheet(P)}else{sheet.innerHTML="<h2>"+d.t+"</h2><p>"+(typeof d.x==="function"?d.x():d.x)+'</p><div class="row">'+(tag==="tv"&&VID_OK&&TV_CHANNELS.length>1?'<button class="btn ghost" id="chn">Next channel</button>':"")+(d.b?'<button class="btn" id="go">'+(tag==="lamp"&&night?"Turn the lights back on":d.b)+"</button>":"")+'<button class="btn ghost" id="bk">Step back</button></div>';
-$("bk").onclick=step;if($("cpy"))$("cpy").onclick=function(){var b=this,done=function(){b.textContent="Copied";setTimeout(function(){b.textContent="Copy"},1600)};try{navigator.clipboard.writeText(ABOUT.email).then(done,function(){var r=document.createRange();r.selectNodeContents($("aem"));var g=getSelection();g.removeAllRanges();g.addRange(r)})}catch(e){}};if($("chn"))$("chn").onclick=function(){tune(TVCH+1);setTimeout(function(){open_("tv")},500)};if($("go"))$("go").onclick=function(){if(tag==="rocket"){window.open(TWIN_URL,"_blank","noopener");return}if(tag==="lamp"){night=!night;$("go").textContent=night?"Turn the lights back on":"Switch the light";var lp_=sheet.querySelector("p");if(lp_)lp_.textContent=TG.lamp.x()}else if(tag==="tv"){vid.muted=!vid.muted;if(!vid.muted){vid.currentTime=0;vid.play().catch(function(){})}$("go").textContent=vid.muted?"Turn the sound on":"Mute it"}else inspect(NOW)}}
+$("bk").onclick=step;if($("cpy"))$("cpy").onclick=function(){var b=this,done=function(){b.textContent="Copied";setTimeout(function(){b.textContent="Copy"},1600)};try{navigator.clipboard.writeText(ABOUT.email).then(done,function(){var r=document.createRange();r.selectNodeContents($("aem"));var g=getSelection();g.removeAllRanges();g.addRange(r)})}catch(e){}};if($("chn"))$("chn").onclick=function(){tune(TVCH+1);setTimeout(function(){open_("tv")},500)};if($("go"))$("go").onclick=function(){if(tag==="rocket"){rocketBoost();window.open(TWIN_URL,"_blank","noopener");return}if(tag==="lamp"){night=!night;$("go").textContent=night?"Turn the lights back on":"Switch the light";var lp_=sheet.querySelector("p");if(lp_)lp_.textContent=TG.lamp.x()}else if(tag==="tv"){vid.muted=!vid.muted;if(!vid.muted){vid.currentTime=0;vid.play().catch(function(){})}$("go").textContent=vid.muted?"Turn the sound on":"Mute it"}else inspect(NOW)}}
 sheet.classList.add("on")}
 function pocketSheet(P){var n=P.list.length,top=P.p.k==="top10";
 var h="<h2>"+esc(P.p.name)+"</h2><p>"+(n?n+(n===1?" record":" records")+". Tap a spine to pull one out, or pick from here.":"Nothing in here right now.")+"</p>";
@@ -1339,7 +1367,7 @@ function frame(t){requestAnimationFrame(frame);var dt=Math.min((t-last)/1000||.0
 rec.rotation.y=-(t/1000)*(100/3)/60*2*PI%(2*PI);var k=1-Math.pow(.0005,dt);cp.lerp(gp,k);ct.lerp(gt,k);ay+=(yaw-ay)*.12;ap+=(pit-ap)*.12;
 var pn=nt;nt+=((night?1:0)-nt)*.05;if(Math.abs(nt-(night?1:0))<.002)nt=night?1:0;if(nt!==pn||!started)setLight(nt);document.body.classList.toggle("night",nt>.5);
 var want=nt>.5?ENVN:ENVD;if(want!==curEnv){curEnv=CUR_ENV=want;ALLM.forEach(function(m){m.envMap=want})}
-curLead+=(curLeadT-curLead)*.12;var cov=Math.max(0,Math.min(1,(WZ1-.11-Math.max(curLead,WZ0-.11))/(WZ1-WZ0)));if(Math.abs(cov-COV)>.004){COV=cov;SHEER=1-.55*cov;setLight(nt)}var cw=CZF-curLead;curt.scale.x=cw/.42;curt.position.z=(CZF+curLead)/2;RINGS.forEach(function(r,i){r.position.z=CZF-.02-(cw-.04)*i/(RINGS.length-1)});LAMPV+=((LAMP_ON?1:0)-LAMPV)*Math.min(1,dt*8);FLL.intensity=LAMPV*(.62+.3*nt);FLD.intensity=LAMPV*.4;LBULB.emissiveIntensity=LAMPV*3;LSH.emissiveIntensity=LAMPV*(.55+.25*nt);plantSway(t,Math.max(0,Math.sin(t*.00045)*.6+Math.sin(t*.00113+1.7)*.3));wind(t*.001);TVON+=((TV_ON?1:0)-TVON)*Math.min(1,dt*(TV_ON?5:7));CRT.uniforms.uOn.value=TVON;[KNOB.tvch,KNOB.tvpow].forEach(function(k){k.rotation.z+=(k.userData.rz-k.rotation.z)*Math.min(1,dt*12)});KNOB.tvpow.position.z+=(KNOB.tvpow.userData.z+KNOB.tvpow.userData.pz-KNOB.tvpow.position.z)*Math.min(1,dt*12);CRT.uniforms.uT.value=t*.001;CRT.uniforms.uStatic.value=TUNING||!VID_OK?1:Math.max(0,1-(performance.now()-TUNE_T)/350);tvL.intensity=(.18+.05*Math.sin(t*.013)*Math.sin(t*.0071))*(1+nt*1.5)*TVON;lavaUpdate(t);postcardUpdate();houseUpdate(t);HDOOR.rotation.y+=((focus==="house"?-1.25:0)-HDOOR.rotation.y)*Math.min(1,dt*4);BL.forEach(function(b){var ph=t*.001*b.s+b.p,u=.5-.5*Math.cos(ph),y=.012+u*.15,v=Math.sin(ph),rr_=Math.min(b.r,gr_(y)*.72);b.m.position.set(b.x*gr_(y)/.03,.08+y,0);b.m.scale.set(rr_*(1-.12*Math.abs(v)),rr_*(1+.35*Math.abs(v)),rr_*(1-.12*Math.abs(v)))});
+curLead+=(curLeadT-curLead)*.12;var cov=Math.max(0,Math.min(1,(WZ1-.11-Math.max(curLead,WZ0-.11))/(WZ1-WZ0)));if(Math.abs(cov-COV)>.004){COV=cov;SHEER=1-.55*cov;setLight(nt)}var cw=CZF-curLead;curt.scale.x=cw/.42;curt.position.z=(CZF+curLead)/2;RINGS.forEach(function(r,i){r.position.z=CZF-.02-(cw-.04)*i/(RINGS.length-1)});LAMPV+=((LAMP_ON?1:0)-LAMPV)*Math.min(1,dt*8);FLL.intensity=LAMPV*(.62+.3*nt);FLD.intensity=LAMPV*.4;LBULB.emissiveIntensity=LAMPV*3;LSH.emissiveIntensity=LAMPV*(.55+.25*nt);plantSway(t,Math.max(0,Math.sin(t*.00045)*.6+Math.sin(t*.00113+1.7)*.3));wind(t*.001);TVON+=((TV_ON?1:0)-TVON)*Math.min(1,dt*(TV_ON?5:7));CRT.uniforms.uOn.value=TVON;[KNOB.tvch,KNOB.tvpow].forEach(function(k){k.rotation.z+=(k.userData.rz-k.rotation.z)*Math.min(1,dt*12)});KNOB.tvpow.position.z+=(KNOB.tvpow.userData.z+KNOB.tvpow.userData.pz-KNOB.tvpow.position.z)*Math.min(1,dt*12);CRT.uniforms.uT.value=t*.001;CRT.uniforms.uStatic.value=TUNING||!VID_OK?1:Math.max(0,1-(performance.now()-TUNE_T)/350);tvL.intensity=(.18+.05*Math.sin(t*.013)*Math.sin(t*.0071))*(1+nt*1.5)*TVON;lavaUpdate(t);postcardUpdate();houseUpdate(t);rocketUpdate(t);HDOOR.rotation.y+=((focus==="house"?-1.25:0)-HDOOR.rotation.y)*Math.min(1,dt*4);BL.forEach(function(b){var ph=t*.001*b.s+b.p,u=.5-.5*Math.cos(ph),y=.012+u*.15,v=Math.sin(ph),rr_=Math.min(b.r,gr_(y)*.72);b.m.position.set(b.x*gr_(y)/.03,.08+y,0);b.m.scale.set(rr_*(1-.12*Math.abs(v)),rr_*(1+.35*Math.abs(v)),rr_*(1-.12*Math.abs(v)))});
 var dir=ct.clone().sub(cp),sp=new T.Spherical().setFromVector3(dir);sp.theta+=ay;sp.phi=Math.min(Math.max(sp.phi-ap,.3),2.8);dir.setFromSpherical(sp);
 cam.position.copy(cp);cam.position.x+=Math.sin(t*.00037)*.006;cam.position.y+=Math.sin(t*.00029)*.004;cam.lookAt(cam.position.clone().add(dir));var fx=focus==="bean"?16:0;if(Math.abs(fx-FOVX)>.01){FOVX+=(fx-FOVX)*Math.min(1,dt*3);cam.fov=BFOV+FOVX;cam.updateProjectionMatrix()}cam.updateMatrixWorld();
 DUST.uniforms.uTime.value=t*.001;TL.value.copy(key.position).sub(key.target.position).normalize().transformDirection(cam.matrixWorldInverse);TI.value=key.intensity*.18*SHEER+LAMPV*.25;DL[0].set(FLX,1.25,FLZ);DLC[0].setRGB(1,.62,.3).multiplyScalar(.55*LAMPV);DL[1].set(-.37,.95,-.03);DLC[1].setRGB(1,.35,.6).multiplyScalar(.1+.35*nt);

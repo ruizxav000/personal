@@ -1,21 +1,17 @@
-// a desk model of the Apollo 11 Saturn V where the hourglass used to stand, built from the 3D-print model Xavier sent
-// (S-IC in two halves with the F-1s, fairings and fins; the S-IC/S-II interstage with its ullage motors; the S-II with
-// its J-2s and the conical interstage; the S-IVB; the lunar module adapter; the service module; the command module under
-// its boost cover; and the escape tower). The parts are assembled, culled where sealed inside one another, and packed in
-// media/saturnv.txt (gzipped binary, base64 so every host serves it). It stands on four hold-down posts on a walnut plinth.
+// a floating model of the Apollo 11 Saturn V, built from the 3D-print model Xavier sent (S-IC in two halves with the
+// F-1s, fairings and fins; the S-IC/S-II interstage with its ullage motors; the S-II with its J-2s and the conical
+// interstage; the S-IVB; the lunar module adapter; the service module; the command module under its boost cover; and the
+// escape tower). The parts are assembled, culled where sealed inside one another, and packed in media/saturnv.txt
+// (gzipped binary, base64 so every host serves it). It hangs in the air in front of the window, drifting gently.
 // Paint, Apollo 11 (AS-506): white overall; S-IC roll pattern of four black stripes from the base to the intertank;
 // a flag over a red "USA" on the LOX tank on four sides; "UNITED STATES" down the S-II on four sides; the two-bit roll
 // code on the S-II/S-IVB interstage; a black stripe over the S-IVB forward skirt and instrument unit; silver service
 // module with its flag and "UNITED STATES"; black F-1s; light-grey escape tower truss with a dark nose.
-// Click it for the Twin Paradox card.
-var rk=grp("rocket",.36,.39,.02),SVS=2.9e-4,SVH=1008.13,SVLIFT=2;
-var WAL=(function(){var C=[cvs(512),cvs(512)],x=C[0].getContext("2d"),b=C[1].getContext("2d");x.fillStyle="#4d2c18";x.fillRect(0,0,512,512);b.fillStyle=gray(.5);b.fillRect(0,0,512,512);// walnut grain
-for(var i=0;i<160;i++){var y=R()*512,amp=2+R()*6,f=.004+R()*.01,ph=R()*7,a=.06+R()*.22,dk=R()<.6;x.strokeStyle=dk?"rgba(22,10,4,"+a+")":"rgba(170,108,62,"+a*.8+")";b.strokeStyle=dk?gray(.38,.5):gray(.6,.4);x.lineWidth=b.lineWidth=.6+R()*2.6;
-[x,b].forEach(function(c){c.beginPath();for(var xx=-12;xx<=524;xx+=8){var yy=y+Math.sin(xx*f+ph)*amp;xx>-12?c.lineTo(xx,yy):c.moveTo(xx,yy)}c.stroke()})}return[ctex(C[0]),ctex(C[1],1)]})();
-rbox(.075,.012,.075,.006,.002,M(0xffffff,.42,0,{map:WAL[0],bumpMap:WAL[1],bumpScale:.0006}),0,.006,0,rk);
-var SVP=M(0x3a3a3e,.4,.7);[0,1,2,3].forEach(function(k){var a=PI/4+k*PI/2,x=Math.cos(a)*40*SVS,z=Math.sin(a)*40*SVS,h=(47.5+SVLIFT)*SVS;cyl(.0016,.002,h,SVP,x,.012+h/2,z,rk,16)});
+// Click it and the five F-1s light (Twin Paradox card); step back and they wind down. Launch opens Twin Paradox.
+var RKX=-.84,RKY=1.02,RKZ=.8,RKHT=.36;
+var SVH=1008.13,SVS=RKHT/SVH,rk=grp("rocket",RKX,RKY,RKZ),RKB=grp(0,0,0,0,rk),RKFX=grp(0,RKX,RKY,RKZ),RK={b:0,s:0,t:0};
 // clickable proxy: the real mesh is too heavy to raycast on every pointer move
-var rkHit=cyl(.03,.03,.31,new T.MeshBasicMaterial({colorWrite:false,depthWrite:false}),0,.16,0,rk,12);rkHit.castShadow=rkHit.receiveShadow=false;
+var rkHit=cyl(.045,.045,RKHT+.04,new T.MeshBasicMaterial({colorWrite:false,depthWrite:false}),0,RKHT/2,0,rk,12);rkHit.castShadow=rkHit.receiveShadow=false;
 function saturnLivery(W,H){var c=cvs(W,H),x=c.getContext("2d");
 function X(deg){return(.5-deg/360)*W}function Y(mm){return(1-mm/SVH)*H}function pw(mm,R){return mm*W/(2*PI*R)}var ph=H/SVH;
 function band(d0,d1,y0,y1,col){x.fillStyle=col;for(var o=-360;o<=360;o+=360){var a=X(d0+o),b=X(d1+o);x.fillRect(Math.min(a,b),Y(y1),Math.abs(a-b),Y(y0)-Y(y1))}}
@@ -43,7 +39,36 @@ SVMAT.onBeforeCompile=function(sh){sh.uniforms.livery={value:SVLIV};sh.uniforms.
 sh.vertexShader=sh.vertexShader.replace("#include <common>","#include <common>\nvarying vec3 vLP;").replace("#include <begin_vertex>","#include <begin_vertex>\nvLP=position;");
 sh.fragmentShader=sh.fragmentShader.replace("#include <common>","#include <common>\nvarying vec3 vLP;uniform sampler2D livery;uniform float svH;").replace("#include <color_fragment>",
 "#ifdef USE_COLOR\nif(vColor.g<.01&&vColor.r>.99){vec2 lu=vec2(.5-atan(vLP.z,vLP.x)/6.2831853,vLP.y/svH);diffuseColor.rgb*=sRGBToLinear(texture2D(livery,lu)).rgb;}else diffuseColor.rgb*=vColor;\n#endif")};
-var SV=grp(0,0,.012+SVLIFT*SVS,0,rk);SV.scale.setScalar(SVS);SV.rotation.y=-PI/2;
+var SV=grp(0,0,0,0,RKB);SV.scale.setScalar(SVS);SV.rotation.y=-PI/2;
+// engine fire: five F-1 jets (centre and four on the axes, 40 mm out, 17.4 mm exit radius at model scale) that merge into
+// one plume, plus a warm light that throws the glow on the rocket, the window and the floor. Kept outside the clickable
+// group so the hover outline skips it.
+var FLV="varying vec3 vP;varying vec3 vN;varying vec3 vV;varying float vH;uniform float uL;void main(){vec3 p=position;vH=uv.y;vP=p;vec4 w=modelViewMatrix*vec4(p,1.);vN=normalize(normalMatrix*normal);vV=normalize(-w.xyz);gl_Position=projectionMatrix*w;}",
+FLF="varying vec3 vP;varying vec3 vN;varying vec3 vV;varying float vH;uniform float uT,uA,uK;uniform vec3 c0,c1,c2;"+
+"float h3(vec3 p){return fract(sin(dot(p,vec3(127.1,311.7,74.7)))*43758.5453);}"+
+"float n3(vec3 p){vec3 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(mix(h3(i),h3(i+vec3(1,0,0)),f.x),mix(h3(i+vec3(0,1,0)),h3(i+vec3(1,1,0)),f.x),f.y),mix(mix(h3(i+vec3(0,0,1)),h3(i+vec3(1,0,1)),f.x),mix(h3(i+vec3(0,1,1)),h3(i+vec3(1,1,1)),f.x),f.y),f.z);}"+
+"void main(){float d=1.-vH,face=abs(dot(normalize(vN),normalize(vV)));"+
+"float n=n3(vec3(vP.x*uK,vP.y*uK+uT*7.,vP.z*uK))*.65+n3(vec3(vP.x*uK*2.3,vP.y*uK*2.3+uT*13.,vP.z*uK*2.3))*.35;"+
+"float a=pow(face,1.6)*smoothstep(0.,.08,d)*pow(1.-d,1.25)*(.55+.9*n)*uA;"+
+"vec3 c=mix(c2,c1,smoothstep(.15,.75,1.-d+n*.25));c=mix(c,c0,smoothstep(.55,1.,(1.-d)*face+n*.15));gl_FragColor=vec4(c*a,a);}";
+function flameMat(c0,c1,c2,k){return new T.ShaderMaterial({uniforms:{uT:{value:0},uA:{value:0},uK:{value:k},c0:{value:new T.Color(c0)},c1:{value:new T.Color(c1)},c2:{value:new T.Color(c2)}},
+vertexShader:FLV,fragmentShader:FLF,transparent:true,depthWrite:false,blending:T.AdditiveBlending,side:T.DoubleSide})}
+var FJ=flameMat(0xfff6dc,0xffc65a,0xff6a1a,90),FP=flameMat(0xffe2a0,0xff9a3a,0xb8381a,38),FMS=[FJ,FP],FPL=new T.Group();RKFX.add(FPL);
+function flameGeo(r0,r1,len){var g=new T.CylinderGeometry(r1,r0,len,28,12,true);g.translate(0,-len/2,0);return g}
+var FJG=flameGeo(17*SVS,22*SVS,150*SVS),FPG=flameGeo(58*SVS,40*SVS,330*SVS);
+[[0,0],[40,0],[-40,0],[0,40],[0,-40]].forEach(function(e){var m=new T.Mesh(FJG,FJ);m.position.set(e[0]*SVS,0,e[1]*SVS);m.raycast=function(){};m.renderOrder=3;FPL.add(m)});
+var fpm=new T.Mesh(FPG,FP);fpm.position.y=-60*SVS;fpm.raycast=function(){};fpm.renderOrder=3;FPL.add(fpm);FPL.visible=false;
+var RKL=new T.PointLight(0xff8a3a,0,1.6,2);RKL.position.y=-.08;RKFX.add(RKL);
+function rocketUpdate(t){var dt=Math.min(.05,(t-(RK.t||t))/1000);RK.t=t;var on=focus==="rocket"?1:0;
+RK.b+=(on-RK.b)*Math.min(1,dt*(on?3.2:1.6));if(RK.b<.002&&!on)RK.b=0;RK.s=Math.max(0,RK.s-dt*.7);
+var b=RK.b,f=b*(1+RK.s*.5),s=t/1000,sh=.0007*b;
+RKB.position.set(Math.sin(s*.53)*.004+(Math.random()-.5)*sh,Math.sin(s*1.1)*.007+.025*b*b*(3-2*b)+(Math.random()-.5)*sh,Math.cos(s*.71)*.003+(Math.random()-.5)*sh);
+RKB.rotation.set(Math.sin(s*.8)*.012*(1-b),Math.sin(s*.27)*.05,Math.sin(s*.63)*.015*(1-b));
+RKFX.position.set(RKX+RKB.position.x,RKY+RKB.position.y,RKZ+RKB.position.z);
+FPL.visible=f>.003;if(!FPL.visible){RKL.intensity=0;return}var fl=.85+.15*Math.random();
+FMS.forEach(function(m){m.uniforms.uT.value=s;m.uniforms.uA.value=Math.min(1,f)*fl});FPL.scale.set(1,.35+.65*f+.08*Math.random(),1);
+RKL.intensity=(night?2.2:1.2)*Math.min(1.3,f)*fl}
+function rocketBoost(){RK.s=1}
 function saturnBuild(buf){var dv=new DataView(buf),nv=dv.getUint32(4,true),ni=dv.getUint32(8,true),mn=[0,1,2].map(function(i){return dv.getFloat32(12+i*4,true)}),mx=[0,1,2].map(function(i){return dv.getFloat32(24+i*4,true)});
 var o=36,q=new Uint16Array(buf.slice(o,o+nv*6));o+=nv*6;var nr=new Int8Array(buf,o,nv*3);o+=nv*3;var cl=new Uint8Array(buf,o,nv);o+=nv;o+=(4-(nv*10)%4)%4;var ix=new Uint32Array(buf,o,ni);
 var p=new Float32Array(nv*3),col=new Float32Array(nv*3);for(var i=0;i<nv;i++){for(var a=0;a<3;a++){p[i*3+a]=mn[a]+q[i*3+a]/65535*(mx[a]-mn[a]);col[i*3+a]=SVPAL[cl[i]][a]}}
