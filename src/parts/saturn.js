@@ -63,15 +63,12 @@ var FCG=flameGeo(3*SVS,13*SVS,95*SVS),FJG=flameGeo(15*SVS,20*SVS,250*SVS),FPG=fl
 [[0,0],[40,0],[-40,0],[0,40],[0,-40]].forEach(function(e,ei){[[FCG,FC,4],[FJG,FJ,3]].forEach(function(q){var m=new T.Mesh(q[0],q[1]);m.position.set(e[0]*SVS,0,e[1]*SVS);m.userData.e=ei;m.raycast=function(){};m.renderOrder=q[2];FPL.add(m)})});
 var fpm=new T.Mesh(FPG,FP);fpm.position.y=-45*SVS;fpm.raycast=function(){};fpm.renderOrder=3;FPL.add(fpm);FPL.visible=false;
 var RKL=new T.PointLight(0xff8a3a,0,1.6,2);RKL.position.y=-.08;RKFX.add(RKL);
-// on the pad the fire has nowhere to go but out across the shelf top: a flat, turning splash of flame under the engines,
-// and steam and smoke that billow out from the base, roll along the shelf and spill over its edge
+// on the pad the fire has nowhere to go but out across the shelf top: a flat, turning splash of flame under the engines
 function rkSplashTex(){var c=cvs(256),x=c.getContext("2d"),g=x.createRadialGradient(128,128,0,128,128,128);g.addColorStop(0,"rgba(255,246,214,1)");g.addColorStop(.3,"rgba(255,206,104,1)");g.addColorStop(.6,"rgba(255,128,32,.8)");g.addColorStop(.85,"rgba(200,60,10,.3)");g.addColorStop(1,"rgba(0,0,0,0)");x.fillStyle=g;x.fillRect(0,0,256,256);
 x.globalCompositeOperation="lighter";for(var k=0;k<38;k++){var a=k/38*6.2832+Math.sin(k*7.3)*.12,l=70+((k*53)%47),w=.05+((k*31)%7)*.008;x.fillStyle="rgba(255,"+(120+(k*29)%90)+",40,.16)";x.beginPath();x.moveTo(128,128);x.arc(128,128,l,a-w,a+w);x.closePath();x.fill()}return ctex(c)}
-function rkPuffTex(){var c=cvs(128),x=c.getContext("2d");for(var k=0;k<9;k++){var px=64+Math.sin(k*2.4)*22*(k%3)/2,py=64+Math.cos(k*2.4)*22*(k%3)/2,r=26+(k*13)%18,g=x.createRadialGradient(px,py,0,px,py,r);g.addColorStop(0,"rgba(255,255,255,.55)");g.addColorStop(1,"rgba(255,255,255,0)");x.fillStyle=g;x.fillRect(0,0,128,128)}return ctex(c)}
 var RKSPT=rkSplashTex(),RKSP=new T.Group(),RKSPM=[0,1].map(function(i){var m=new T.Mesh(new T.CircleGeometry(1,40),new T.MeshBasicMaterial({map:RKSPT,color:0xffffff,transparent:true,opacity:0,depthWrite:false,toneMapped:false}));m.rotation.x=-PI/2;m.raycast=function(){};m.renderOrder=5;RKSP.add(m);return m});
 RKSP.position.set(RKX,RKFLOOR-.0045,RKZ);scene.add(RKSP);RKSP.visible=false;
-var RKPT=rkPuffTex(),RKPG=new T.PlaneGeometry(1,1),RKSM=[];for(var rki=0;rki<40;rki++){var rkS=new T.Mesh(RKPG,new T.MeshBasicMaterial({map:RKPT,transparent:true,opacity:0,depthWrite:false}));rkS.raycast=function(){};rkS.renderOrder=2;rkS.visible=false;scene.add(rkS);RKSM.push({s:rkS,a:0,l:1,v:new T.Vector3(),r0:.02,r1:.1})}
-RK.y=0;RK.v=0;RK.on=0;RK.tOn=0;RK.hold=0;RK.eng=[0,0,0,0,0];RK.spawn=0;
+RK.y=0;RK.v=0;RK.on=0;RK.tOn=0;RK.hold=0;RK.eng=[0,0,0,0,0];
 // the launch: engines light centre first, then one opposing pair, then the other; it is held down about three seconds
 // while thrust builds, then released, and climbs slowly, gathering speed, before easing into a hover. Stepping back
 // brings it down on throttled engines, which cut at touchdown.
@@ -92,11 +89,6 @@ var gap=Math.max(0,RKFX.position.y-RKFLOOR),pad=b*Math.max(0,1-gap/.1),fl=.85+.1
 FPL.visible=f>.003;if(FPL.visible){FMS.forEach(function(m){m.uniforms.uT.value=s;m.uniforms.uA.value=Math.min(1,f)*fl});
 FPL.children.forEach(function(m){var L=m.geometry.parameters.height,y0=-m.position.y,e=m.userData.e,lv=e==null?f:RK.eng[e]*(1+RK.s*.5),k=Math.min(.35+.65*lv+.08*Math.random(),(gap-y0)/L);m.visible=k>.01&&lv>.02;m.scale.set(e==null?1:.45+.55*Math.min(1,lv),Math.max(.01,k),e==null?1:.45+.55*Math.min(1,lv))})}
 RKSP.position.set(RKX,RKFLOOR-.0045,RKZ);RKSP.visible=pad>.01;if(RKSP.visible)RKSPM.forEach(function(m,i){var r=(.055+.03*pad)*(1+.08*Math.sin(s*(23+i*7))+.05*Math.random())*(i?.7:1);m.scale.set(r,r,1);m.rotation.z=s*(i?-1.7:1.1);m.material.opacity=Math.min(1,pad*1.3)*fl*(i?.8:1);m.material.color.setScalar(1.25+.5*fl)});
-// smoke: born at the base while the fire is on the shelf, rolling outward and up, growing and thinning
-RK.spawn+=dt*pad*16;while(RK.spawn>=1){RK.spawn-=1;for(var j=0;j<RKSM.length&&RKSM[j].a<RKSM[j].l;j++);if(j===RKSM.length)break;var q=RKSM[j],an=Math.random()*6.2832,sp2=.07+.08*Math.random();
-q.a=0;q.l=2.2+Math.random()*1.6;q.s.position.set(RKX+Math.cos(an)*.04,RKFLOOR+.018,RKZ+Math.sin(an)*.04);q.v.set(Math.cos(an)*sp2,.01+.025*Math.random(),Math.sin(an)*sp2);q.r0=.035+.02*Math.random();q.r1=.13+.09*Math.random();q.s.visible=true;q.rot=Math.random()*6.28}
-var smc=night?.42:.86;RKSM.forEach(function(q){if(q.a>=q.l){q.s.visible=false;return}q.a+=dt;if(q.a>=q.l){q.s.visible=false;return}var u=q.a/q.l;q.v.multiplyScalar(Math.max(0,1-dt*.9));q.v.y+=dt*.006;q.s.position.addScaledVector(q.v,dt);
-var r=q.r0+(q.r1-q.r0)*(1-Math.pow(1-u,2));q.s.scale.set(r,r,1);q.s.material.opacity=Math.min(1,u*5)*Math.pow(1-u,1.3)*.85;var w=pad*.6;q.s.material.color.setRGB(smc+w*.55,smc+w*.3,smc+w*.12);q.rot+=dt*.15;q.s.quaternion.copy(cam.quaternion);q.s.rotateZ(q.rot)})
 RKL.position.y=Math.max(-.08,RKFLOOR+.02-RKFX.position.y);RKL.intensity=f>.003?(night?2.2:1.2)*Math.min(1.3,f)*fl:0}
 function rocketBoost(){RK.s=1}
 function saturnBuild(buf){var dv=new DataView(buf),nv=dv.getUint32(4,true),ni=dv.getUint32(8,true),mn=[0,1,2].map(function(i){return dv.getFloat32(12+i*4,true)}),mx=[0,1,2].map(function(i){return dv.getFloat32(24+i*4,true)});
