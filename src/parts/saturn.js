@@ -2,7 +2,7 @@
 // (S-IC in two halves with the F-1s, fairings and fins; the S-IC/S-II interstage with its ullage motors; the S-II with
 // its J-2s and the conical interstage; the S-IVB; the lunar module adapter; the service module; the command module under
 // its boost cover; and the escape tower). The parts are assembled, culled where sealed inside one another, and packed in
-// media/saturnv.bin. It stands on four hold-down posts on a walnut plinth.
+// media/saturnv.txt (gzipped binary, base64 so every host serves it). It stands on four hold-down posts on a walnut plinth.
 // Paint, Apollo 11 (AS-506): white overall; S-IC roll pattern of four black stripes from the base to the intertank;
 // a flag over a red "USA" on the LOX tank on four sides; "UNITED STATES" down the S-II on four sides; the two-bit roll
 // code on the S-II/S-IVB interstage; a black stripe over the S-IVB forward skirt and instrument unit; silver service
@@ -49,5 +49,5 @@ var o=36,q=new Uint16Array(buf.slice(o,o+nv*6));o+=nv*6;var nr=new Int8Array(buf
 var p=new Float32Array(nv*3),col=new Float32Array(nv*3);for(var i=0;i<nv;i++){for(var a=0;a<3;a++){p[i*3+a]=mn[a]+q[i*3+a]/65535*(mx[a]-mn[a]);col[i*3+a]=SVPAL[cl[i]][a]}}
 var g=new T.BufferGeometry();g.setAttribute("position",new T.BufferAttribute(p,3));g.setAttribute("normal",new T.BufferAttribute(nr,3,true));g.setAttribute("color",new T.BufferAttribute(col,3));g.setIndex(new T.BufferAttribute(ix,1));
 var m=mesh(g,SVMAT,0,0,0,SV);m.raycast=function(){}}
-fetch("media/saturnv.bin").then(function(r){if(!r.ok)throw 0;return r.arrayBuffer()}).then(function(b){var u=new Uint8Array(b,0,2);
+fetch("media/saturnv.txt").then(function(r){if(!r.ok)throw 0;return r.text()}).then(function(s){s=atob(s.trim());var u=new Uint8Array(s.length);for(var i=0;i<s.length;i++)u[i]=s.charCodeAt(i);var b=u.buffer;
 if(u[0]===0x1f&&u[1]===0x8b){if(!window.DecompressionStream)throw 0;return new Response(new Blob([b]).stream().pipeThrough(new DecompressionStream("gzip"))).arrayBuffer()}return b}).then(saturnBuild).catch(function(){});
