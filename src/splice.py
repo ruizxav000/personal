@@ -304,5 +304,22 @@ s=s.replace(a,'postcardUpdate();houseUpdate(t);TVH.classList.toggle("on",focus==
 a='// ---------- leaning sleeve (now playing) ----------'
 assert s.count(a)==1
 s=s.replace(a,'var TVH=$("tvhint");TVH.textContent=(matchMedia("(hover:none)").matches?"Tap":"Click")+" the knob to change the channel";\n'+a)
+# record strips: a plain mouse can reach every cover. The wheel scrolls the row sideways, a click-and-drag pulls it along
+# (without pulling out a record), and arrows at either end show while there is more that way. Touch keeps its swipe.
+a='pullP(P,+b.getAttribute("data-i"))}})}'
+assert s.count(a)==1
+s=s.replace(a,'pullP(P,+b.getAttribute("data-i"))}});stripUI(sheet.querySelector(".strip"))}\n'
+ +'var STRIPUPD=null;addEventListener("resize",function(){if(STRIPUPD)STRIPUPD()});\n'
+ +'function stripUI(st){STRIPUPD=null;if(!st)return;var w=document.createElement("div");w.className="stripw";st.parentNode.insertBefore(w,st);w.appendChild(st);'
+ +'var ch=\'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>\';'
+ +'var L=document.createElement("button"),Rr=document.createElement("button");L.type=Rr.type="button";L.className="sa l";Rr.className="sa r";L.tabIndex=Rr.tabIndex=-1;L.setAttribute("aria-label","Scroll left");Rr.setAttribute("aria-label","Scroll right");L.innerHTML=Rr.innerHTML=ch;w.appendChild(L);w.appendChild(Rr);'
+ +'function upd(){var m=st.scrollWidth-st.clientWidth;L.classList.toggle("on",st.scrollLeft>2);Rr.classList.toggle("on",st.scrollLeft<m-2)}STRIPUPD=upd;'
+ +'function page(d){st.scrollBy({left:d*Math.max(76,st.clientWidth-76),behavior:"smooth"})}L.onclick=function(){page(-1)};Rr.onclick=function(){page(1)};'
+ +'st.addEventListener("scroll",upd,{passive:true});requestAnimationFrame(upd);'
+ +'st.addEventListener("wheel",function(e){var m=st.scrollWidth-st.clientWidth;if(m<=0||Math.abs(e.deltaX)>=Math.abs(e.deltaY))return;e.preventDefault();st.scrollLeft+=e.deltaY*(e.deltaMode===1?16:e.deltaMode===2?st.clientWidth:1)},{passive:false});'
+ +'var dg=null;st.addEventListener("pointerdown",function(e){if(e.pointerType!=="mouse"||e.button!==0)return;dg={x:e.clientX,s:st.scrollLeft,m:false,id:e.pointerId}});'
+ +'st.addEventListener("pointermove",function(e){if(!dg)return;var dx=e.clientX-dg.x;if(!dg.m&&Math.abs(dx)>5){dg.m=true;try{st.setPointerCapture(dg.id)}catch(_){}st.classList.add("drag")}if(dg.m)st.scrollLeft=dg.s-dx});'
+ +'function end(){if(dg&&dg.m){st.classList.remove("drag");var stop=function(ev){ev.stopPropagation();ev.preventDefault()};st.addEventListener("click",stop,true);setTimeout(function(){st.removeEventListener("click",stop,true)},0)}dg=null}'
+ +'st.addEventListener("pointerup",end);st.addEventListener("pointercancel",end)}')
 open('main.js','w').write(s)
 print('ok',len(s))
